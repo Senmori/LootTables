@@ -1,0 +1,9 @@
+name: ${project.name}
+version: ${project.version}
+description: ${project.description}
+author: ${author}
+main: ${main.Class}
+commands:
+    lt:
+      description: LootTables plugin command
+      aliases: [loot]
