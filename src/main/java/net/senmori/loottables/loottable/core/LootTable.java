@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import net.senmori.loottables.loottable.adapter.InheritanceAdapter;
 import net.senmori.loottables.loottable.utils.JsonUtils;
+import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -19,8 +20,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LootTable {
+    public static final Pattern VALID_CHARS_PATTERN = Pattern.compile("^[a-z0-9-_]*$");
 
     private NamespacedKey location;
     private File file;
@@ -40,10 +44,11 @@ public class LootTable {
     }
 
     /** Set a new {@link NamespacedKey} for this LootTable */
-    public void setPath(NamespacedKey location) {
-        if (location == null) return;
-        this.location = location;
-        file = LootTableManager.getFile(location);
+    public void setPath(NamespacedKey path) {
+        Validate.notNull(path, "Path cannot be null");
+        Validate.notEmpty(path.getKey(), "Path key cannot be empty ");
+        Validate.isTrue(!VALID_CHARS_PATTERN.matcher(path.getKey()).matches(), "Loot Table can only contain a-z, ");
+        this.location = path;
     }
 
     public List<ItemStack> generateLootForPools(Random rand, LootContext context) {
@@ -84,7 +89,7 @@ public class LootTable {
 
     /** Save the LootTable */
     public boolean save() {
-        return ( save(false) );
+        return save(false);
     }
 
     /** Save the LootTable, rewriting all currently written data */

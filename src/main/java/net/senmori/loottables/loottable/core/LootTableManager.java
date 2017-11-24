@@ -17,6 +17,7 @@ import net.senmori.loottables.loottable.functions.LootFunctionManager;
 import org.apache.commons.io.FilenameUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.World;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,8 +33,7 @@ public final class LootTableManager {
     private static Gson gson;
     /* ConcurrentHashMap because it's thread safe, supposedly */
     private static HashMap<NamespacedKey, LootTable> registeredLootTables = Maps.newHashMap();
-    //private static Set<String> registeredDomains = new HashSet<>();
-    private final File baseFolder;
+    private static LootTableManager INSTANCE = new LootTableManager();
 
     static {
         gson = ( new GsonBuilder()
@@ -44,11 +44,17 @@ public final class LootTableManager {
                          .registerTypeAdapter(LootPool.class, new LootPool.Serializer())
                          .registerTypeAdapter(LootTable.class, new LootTable.Serializer())
                          .setPrettyPrinting().create() );
+
+        if(INSTANCE == null) {
+            INSTANCE = new LootTableManager();
+        }
     }
 
+    public static LootTableManager getInstance() {
+        return INSTANCE;
+    }
 
-    public LootTableManager(File folder) {
-        this.baseFolder = folder;
+    private LootTableManager() {
         // reload all loot tables for re-validation.
         registeredLootTables.clear();
         for (NamespacedKey location : registeredLootTables.keySet()) {
@@ -83,12 +89,12 @@ public final class LootTableManager {
     /**
      * Get a {@link NamespacedKey} that matches the given domain and path.
      *
-     * @param resourceDomain - the namespace of the plugin(i.e. "minecraft")
+     * @param resourceDomain - the namespace of the plugin(i.e. "minecraft", or the plugin name)
      * @param resourcePath   - the path to the loot table, without file extensions.
      *
      * @return the {@link NamespacedKey} that has the matching arguments, or null.
      */
-    public static NamespacedKey getResourceLocation(String resourceDomain, String resourcePath) {
+    public static NamespacedKey getKey(String resourceDomain, String resourcePath) {
         for (NamespacedKey loc : registeredLootTables.keySet()) {
             if (loc.getKey().equals(resourceDomain) && loc.getKey().equals(resourcePath)) {
                 return loc;
@@ -107,60 +113,65 @@ public final class LootTableManager {
         return getLootTable(resource, false);
     }
 
-    public static LootTable getLootTable(NamespacedKey resource, boolean forceReload) {
+    public static LootTable getLootTable(NamespacedKey path, boolean forceReload) {
         if (forceReload) {
-            File file = getFile(resource);
+            File file = getFile(path);
             if (file != null && file.exists()) {
                 try {
-                    LootTable table = load(resource);
-                    table.setPath(resource);
-                    registeredLootTables.put(resource, table);
+                    LootTable table = load(path);
+                    table.setPath(path);
+                    registeredLootTables.put(path, table);
                     return table;
                 } catch (IOException e) {
-                    Bukkit.getLogger().log(Level.WARNING, "Couldn't load loot table " + resource.toString());
+                    Bukkit.getLogger().log(Level.WARNING, "Couldn't load loot table " + path.toString());
                     return LootTable.emptyLootTable();
                 }
             }
         }
-        if (registeredLootTables.containsKey(resource)) {
-            return registeredLootTables.get(resource);
+        if (registeredLootTables.containsKey(path)) {
+            return registeredLootTables.get(path);
         } else {
-            File file = getFile(resource);
+            File file = getFile(path);
             if (file != null && file.exists()) {
                 // load file
                 try {
-                    LootTable table = load(resource);
-                    registeredLootTables.put(resource, table);
-                    table.setPath(resource);
+                    LootTable table = load(path);
+                    registeredLootTables.put(path, table);
+                    table.setPath(path);
                     return table;
                 } catch (IOException e) {
-                    Bukkit.getLogger().log(Level.WARNING, "Couldn't load loot table " + resource.toString());
+                    Bukkit.getLogger().log(Level.WARNING, "Couldn't load loot table " + path.toString());
                     return LootTable.emptyLootTable();
                 }
             } else {
                 // no LootTable file exists, create new file, and return empty LootTable
                 LootTable newTable = LootTable.emptyLootTable();
-                registeredLootTables.put(resource, newTable);
-                newTable.setPath(resource);
+                registeredLootTables.put(path, newTable);
+                newTable.setPath(path);
                 return newTable;
             }
         }
     }
 
-    // Get appropriate file location, only works with "world" for now.
-    private static String getFilePath(NamespacedKey location) {
+    /** Get loot table file path from the server datapack location */
+    private static String getFilePath(NamespacedKey path) {
         //TODO: add world selection capability
-        return Bukkit.getWorld("world").getWorldFolder() + File.separator + "data" + File.separator + "loot_tables" + File.separator + location.getNamespace() + File.separator + location.getKey() + ".json";
+        return Bukkit.getWorld("world").getWorldFolder() + File.separator + "data" + File.separator + "loot_tables" + File.separator + path.getNamespace() + File.separator + path.getKey() + ".json";
     }
 
-    public static File getFile(NamespacedKey location) {
-        String url = getFilePath(location);
+    /** Get the loot table location in a given world, at a given location */
+    private static String getFilePath(World world, NamespacedKey path) {
+        return world.getWorldFolder() + File.separator + "data" + File.separator + "loot_tables" + File.separator + path.getNamespace() + File.separator + path.getKey() + ".json";
+    }
+
+    public static File getFile(NamespacedKey path) {
+        String url = getFilePath(path);
         String baseUrl = FilenameUtils.getPath(url);
         String fileName = FilenameUtils.getBaseName(url) + "." + FilenameUtils.getExtension(url);
         try {
-            File path = new File(baseUrl);
-            if (! path.exists()) {
-                path.mkdirs();
+            File baseFile = new File(baseUrl);
+            if (! baseFile.exists()) {
+                baseFile.mkdirs();
             }
             File file = new File(baseUrl + fileName);
             if (! file.exists()) {
@@ -176,21 +187,21 @@ public final class LootTableManager {
     /**
      * Load a loot able from a given {@link NamespacedKey} Will return an empty {@link LootTable} if any errors occur.
      *
-     * @param location the {@link NamespacedKey} that contains the path to the appropriate json file (without file
+     * @param path the {@link NamespacedKey} that contains the path to the appropriate json file (without file
      *                 extensions)
      *
      * @return the appropriate {@link LootTable} if successful, otherwise an empty {@link LootTable} is returned.
      * @throws IOException         thrown if there is an error getting the json file.
      * @throws JsonSyntaxException thrown if there is a json syntax error within the file.
      */
-    public static LootTable load(NamespacedKey location) throws IOException, JsonSyntaxException {
-        if (location.getKey().contains(".")) {
-            Bukkit.getLogger().log(Level.WARNING, "Invalid loot table name \'" + location + "\' (can\'t contain periods)");
+    public static LootTable load(NamespacedKey path) throws IOException, JsonSyntaxException {
+        if (!LootTable.VALID_CHARS_PATTERN.matcher(path.getKey()).matches()) {
+            Bukkit.getLogger().log(Level.WARNING, "Invalid loot table name \'" + path + ". Can only contain \'a-z0-9-_\'");
             return LootTable.emptyLootTable();
         } else {
-            LootTable lootTable = loadLootTable(location);
+            LootTable lootTable = loadLootTable(path);
             if (lootTable == null) {
-                lootTable = loadBuiltInTable(location);
+                lootTable = loadBuiltInTable(path);
             }
 
             if (lootTable == null) {
@@ -203,26 +214,26 @@ public final class LootTableManager {
     /* Get a loot table by a ResourceLocation
     *  Not used to get the built-in loot tables (in assets/...)
     * */
-    private static LootTable loadLootTable(NamespacedKey resource) {
-        File file = getFile(resource);
-        if (file.exists()) {
+    private static LootTable loadLootTable(NamespacedKey path) {
+        File file = getFile(path);
+        if (file != null && file.exists()) {
             if (file.isFile()) {
                 String s;
                 try {
                     s = Files.toString(file, Charsets.UTF_8);
                 } catch (IOException e) {
-                    Bukkit.getLogger().log(Level.WARNING, "Couldn\'t load the loot table at " + resource + " from " + file, e);
+                    Bukkit.getLogger().log(Level.WARNING, "Couldn\'t load the loot table at " + path + " from " + file, e);
                     return LootTable.emptyLootTable();
                 }
 
                 try {
                     return gson.fromJson(s, LootTable.class);
                 } catch (JsonParseException e) {
-                    Bukkit.getLogger().log(Level.SEVERE, "Couldn\'t load loot table " + resource + " from " + file, e);
+                    Bukkit.getLogger().log(Level.SEVERE, "Couldn\'t load loot table " + path + " from " + file, e);
                     return LootTable.emptyLootTable();
                 }
             } else {
-                Bukkit.getLogger().log(Level.WARNING, "Expected to find loot table " + resource + "at " + file + " but it is a folder");
+                Bukkit.getLogger().log(Level.WARNING, "Expected to find loot table " + path + "at " + file + " but it is a folder");
                 return LootTable.emptyLootTable();
             }
         } else {
@@ -238,22 +249,22 @@ public final class LootTableManager {
     /* Get the built-in Minecraft resource tables and see if that given ResourceLocation is there.
         NOT used for anything other than default loot tables.
      */
-    private static LootTable loadBuiltInTable(NamespacedKey location) {
-        URL url = Bukkit.class.getResource("/assets/" + location.getNamespace() + "/loot_tables/" + location.getKey() + ".json");
+    private static LootTable loadBuiltInTable(NamespacedKey path) {
+        URL url = Bukkit.class.getResource("/data/minecraft/loot_tables/" + path.getKey() + ".json");
         if (url != null) {
             String s;
 
             try {
                 s = Resources.toString(url, Charsets.UTF_8);
             } catch (IOException e) {
-                Bukkit.getLogger().log(Level.WARNING, "Couldn't load loot table " + location + " from " + url, e);
+                Bukkit.getLogger().log(Level.WARNING, "Couldn't load loot table " + path + " from " + url, e);
                 return LootTable.emptyLootTable();
             }
 
             try {
                 return gson.fromJson(s, LootTable.class);
             } catch (JsonParseException e) {
-                Bukkit.getLogger().log(Level.WARNING, "Couldn't load loot table " + location + " from " + url);
+                Bukkit.getLogger().log(Level.WARNING, "Couldn't load loot table " + path + " from " + url);
                 return LootTable.emptyLootTable();
             }
         } else {
