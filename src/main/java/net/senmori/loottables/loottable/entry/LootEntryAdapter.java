@@ -1,4 +1,4 @@
-package org.bukkit.craftbukkit.loottable.entry;
+package net.senmori.loottables.loottable.entry;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
@@ -6,9 +6,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSyntaxException;
-import org.bukkit.craftbukkit.loottable.adapter.InheritanceAdapter;
-import org.bukkit.craftbukkit.loottable.conditions.LootCondition;
-import org.bukkit.craftbukkit.loottable.utils.JsonUtils;
+import net.senmori.loottables.loottable.adapter.InheritanceAdapter;
+import net.senmori.loottables.loottable.conditions.LootCondition;
+import net.senmori.loottables.loottable.utils.JsonUtils;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -24,7 +24,7 @@ public class LootEntryAdapter extends InheritanceAdapter<LootEntry> {
         } else if (lootEntry instanceof LootEntryTable) {
             object.addProperty("type", "loot_table");
         } else {
-            if (!(lootEntry instanceof LootEntryEmpty)) {
+            if (! ( lootEntry instanceof LootEntryEmpty )) {
                 throw new IllegalArgumentException("Unknown loot entry type \'" + lootEntry + "\'");
             }
             object.addProperty("type", "empty");
@@ -32,7 +32,7 @@ public class LootEntryAdapter extends InheritanceAdapter<LootEntry> {
         object.addProperty("weight", lootEntry.weight);
         object.addProperty("quality", lootEntry.quality);
         lootEntry.serialize(object, context);
-        if (lootEntry.conditions != null && !lootEntry.conditions.isEmpty()) {
+        if (lootEntry.conditions != null && ! lootEntry.conditions.isEmpty()) {
             object.add("conditions", context.serialize(lootEntry.conditions));
         }
         return object;

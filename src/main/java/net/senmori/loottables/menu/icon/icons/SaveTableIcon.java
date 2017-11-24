@@ -1,6 +1,6 @@
 package net.senmori.loottables.menu.icon.icons;
 
-import org.bukkit.craftbukkit.loot.core.LootTable;
+import net.senmori.loottables.loottable.core.LootTable;
 import net.senmori.loottables.menu.Menu;
 import net.senmori.loottables.menu.icon.Icon;
 import org.bukkit.ChatColor;
@@ -26,22 +26,33 @@ public class SaveTableIcon implements Icon {
         this.table = table;
         itemStack = new ItemStack(Material.EMPTY_MAP);
         ItemMeta meta = itemStack.getItemMeta();
-        meta.setDisplayName(ChatColor.AQUA + "Save and Close (" + ChatColor.RESET + table.getResourceLocation().getResourcePath() + ChatColor.AQUA + ")");
+        meta.setDisplayName(ChatColor.AQUA + "Save and Close (" + ChatColor.RESET + table.getResourceLocation().toString() + ChatColor.AQUA + ")");
         itemStack.setItemMeta(meta);
         this.parent = parent;
     }
 
     @Override
-    public ItemStack getItemStack() { return this.itemStack; }
-    public int getSlot() { return this.slot; }
-    public LootTable getTable() { return this.table; }
-    public Menu getParent() { return this.parent; }
+    public ItemStack getItemStack() {
+        return this.itemStack;
+    }
+
+    public int getSlot() {
+        return this.slot;
+    }
+
+    public LootTable getTable() {
+        return this.table;
+    }
+
+    public Menu getParent() {
+        return this.parent;
+    }
 
     @Override
     public void onClick(Player player, int clickedSlot, ItemStack clickedItem, Inventory clickedInventory, ClickType type) {
         player.closeInventory();
-        if(saveTable()) {
-            player.sendMessage(ChatColor.AQUA + "Successfully updated \'" + ChatColor.RESET + table.getResourceLocation().getResourcePath() + ChatColor.AQUA + "\'!");
+        if (saveTable()) {
+            player.sendMessage(ChatColor.AQUA + "Successfully updated \'" + ChatColor.RESET + table.getResourceLocation().toString() + ChatColor.AQUA + "\'!");
         }
     }
 

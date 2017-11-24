@@ -1,12 +1,12 @@
-package org.bukkit.craftbukkit.loottable.functions;
+package net.senmori.loottables.loottable.functions;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import org.bukkit.craftbukkit.loottable.conditions.LootCondition;
-import org.bukkit.craftbukkit.loottable.core.LootContext;
+import net.senmori.loottables.loottable.conditions.LootCondition;
+import net.senmori.loottables.loottable.core.LootContext;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,25 +20,33 @@ public abstract class LootFunction {
         this.conditions = conditions == null ? new ArrayList<>() : conditions;
     }
 
-    public void addCondition(LootCondition condition) { this.conditions.add(condition); }
+    public void addCondition(LootCondition condition) {
+        this.conditions.add(condition);
+    }
 
     public abstract ItemStack apply(ItemStack itemstack, Random rand, LootContext context);
 
-    public List<LootCondition> getConditions() { return this.conditions; }
+    public List<LootCondition> getConditions() {
+        return this.conditions;
+    }
 
 
     public abstract static class Serializer<T extends LootFunction> {
-        private ResourceLocation lootTableLocation;
+        private NamespacedKey lootTableLocation;
         private Class<T> functionClass;
 
-        protected Serializer(ResourceLocation location, Class<T> clazz) {
+        protected Serializer(NamespacedKey location, Class<T> clazz) {
             this.lootTableLocation = location;
             this.functionClass = clazz;
         }
 
-        public ResourceLocation getName() { return this.lootTableLocation; }
+        public NamespacedKey getName() {
+            return this.lootTableLocation;
+        }
 
-        public Class<T> getFunctionClass() { return this.functionClass; }
+        public Class<T> getFunctionClass() {
+            return this.functionClass;
+        }
 
         public abstract void serialize(JsonObject json, T type, JsonSerializationContext context);
 

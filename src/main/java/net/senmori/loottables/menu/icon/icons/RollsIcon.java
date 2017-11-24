@@ -1,6 +1,6 @@
 package net.senmori.loottables.menu.icon.icons;
 
-import org.bukkit.craftbukkit.loot.core.LootPool;
+import net.senmori.loottables.loottable.core.LootPool;
 import net.senmori.loottables.menu.Menu;
 import net.senmori.loottables.menu.icon.Icon;
 import org.bukkit.ChatColor;
@@ -21,16 +21,13 @@ public class RollsIcon implements Icon {
     private ItemStack stack;
 
     /**
-     * The {@link Icon} that displays the {@link LootPool#rolls}.<br>
-     * Clicking this item will do the following: <br>
-     * <indent>LEFT: increase Minimum by 1</indent><br>
-     * <indent>SHIFT_LEFT: decrease Minimum by 1</indent><br>
-     * <indent>RIGHT: increase Maximum by 1</indent><br>
-     * <indent>SHIFT_RIGHT: decrease Maximum by 1</indent><br>
+     * The {@link Icon} that displays the {@link LootPool#rolls}.<br> Clicking this item will do the following: <br>
+     * <indent>LEFT: increase Minimum by 1</indent><br> <indent>SHIFT_LEFT: decrease Minimum by 1</indent><br>
+     * <indent>RIGHT: increase Maximum by 1</indent><br> <indent>SHIFT_RIGHT: decrease Maximum by 1</indent><br>
      * <indent>MIDDLE: reset values to 0</indent>
      *
-     * @param slot - slot this Icon is in
-     * @param pool - the {@link LootPool} which this Icon relates to
+     * @param slot   - slot this Icon is in
+     * @param pool   - the {@link LootPool} which this Icon relates to
      * @param parent - the {@link Menu} this Icon is stored in.
      */
     public RollsIcon(int slot, LootPool pool, Menu parent) {
@@ -40,12 +37,18 @@ public class RollsIcon implements Icon {
         stack = updateItem();
     }
 
-    public LootPool getPool() { return this.pool; }
+    public LootPool getPool() {
+        return this.pool;
+    }
 
-    public int getSlot() { return this.slot; }
+    public int getSlot() {
+        return this.slot;
+    }
 
     @Override
-    public ItemStack getItemStack() { return this.stack; }
+    public ItemStack getItemStack() {
+        return this.stack;
+    }
 
 
     @Override

@@ -1,14 +1,14 @@
-package org.bukkit.craftbukkit.loottable.functions;
+package net.senmori.loottables.loottable.functions;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import org.bukkit.craftbukkit.loottable.conditions.LootCondition;
-import org.bukkit.craftbukkit.loottable.core.LootContext;
-import org.bukkit.craftbukkit.loottable.core.RandomValueRange;
-import org.bukkit.craftbukkit.loottable.utils.JsonUtils;
+import net.senmori.loottables.loottable.conditions.LootCondition;
+import net.senmori.loottables.loottable.core.LootContext;
+import net.senmori.loottables.loottable.core.RandomValueRange;
+import net.senmori.loottables.loottable.utils.JsonUtils;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.ResourceLocation;
 
 import java.util.List;
 import java.util.Random;
@@ -20,8 +20,8 @@ public class SetDamage extends LootFunction {
     /**
      * Sets the item's damage value(durability) for tools.
      *
-     * @param range Specifies a random damage amount from 0.0 to 1.0.
-     *              Where 0.0 is zero durability, and 1.0 is undamaged.
+     * @param range      Specifies a random damage amount from 0.0 to 1.0. Where 0.0 is zero durability, and 1.0 is
+     *                   undamaged.
      * @param conditions the {@link LootCondition}s that must be passed before calculation
      */
     public SetDamage(RandomValueRange range, List<LootCondition> conditions) {
@@ -30,11 +30,11 @@ public class SetDamage extends LootFunction {
     }
 
     /**
-     * Sets the item's damage value(durability) for tools.
-     * {@link LootCondition}s are null-valued with this constructor.
+     * Sets the item's damage value(durability) for tools. {@link LootCondition}s are null-valued with this
+     * constructor.
      *
-     * @param range Specifies a random damage amount from 0.0 to 1.0.
-     *              Where 0.0 is zero durability, and 1.0 is undamaged.
+     * @param range Specifies a random damage amount from 0.0 to 1.0. Where 0.0 is zero durability, and 1.0 is
+     *              undamaged.
      */
     public SetDamage(RandomValueRange range) {
         this(range, null);
@@ -63,11 +63,15 @@ public class SetDamage extends LootFunction {
         return itemstack;
     }
 
-    public RandomValueRange getRange() { return this.range; }
+    public RandomValueRange getRange() {
+        return this.range;
+    }
 
 
     public static class Serializer extends LootFunction.Serializer<SetDamage> {
-        protected Serializer() { super(new ResourceLocation("set_count"), SetDamage.class); }
+        protected Serializer() {
+            super(NamespacedKey.minecraft("set_count"), SetDamage.class);
+        }
 
         @Override
         public void serialize(JsonObject json, SetDamage type, JsonSerializationContext context) {

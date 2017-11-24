@@ -1,17 +1,17 @@
-package org.bukkit.craftbukkit.loottable.functions;
+package net.senmori.loottables.loottable.functions;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import net.minecraft.server.MojangsonParseException;
-import net.minecraft.server.MojangsonParser;
-import net.minecraft.server.NBTTagCompound;
-import org.bukkit.craftbukkit.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.loottable.conditions.LootCondition;
-import org.bukkit.craftbukkit.loottable.core.LootContext;
-import org.bukkit.craftbukkit.loottable.utils.JsonUtils;
+import net.minecraft.server.v1_12_R1.MojangsonParseException;
+import net.minecraft.server.v1_12_R1.MojangsonParser;
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
+import net.senmori.loottables.loottable.conditions.LootCondition;
+import net.senmori.loottables.loottable.core.LootContext;
+import net.senmori.loottables.loottable.utils.JsonUtils;
+import org.bukkit.NamespacedKey;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.ResourceLocation;
 
 import java.util.List;
 import java.util.Random;
@@ -25,7 +25,7 @@ public class SetNBT extends LootFunction {
     /**
      * Adds NBT data to an item.
      *
-     * @param tag NBT data to add.
+     * @param tag        NBT data to add.
      * @param conditions the {@link LootCondition}(s) that must be passed before adding of NBT data.
      */
     public SetNBT(String tag, List<LootCondition> conditions) {
@@ -44,7 +44,9 @@ public class SetNBT extends LootFunction {
 
     /**
      * Set the new NBT data tag.
+     *
      * @param tag the NBT data, in string version.
+     *
      * @return true if the string is formatted correctly.
      */
     public boolean setNBTTag(String tag) {
@@ -61,13 +63,15 @@ public class SetNBT extends LootFunction {
 
     @Override
     public ItemStack apply(ItemStack itemstack, Random rand, LootContext context) {
-        net.minecraft.server.ItemStack nmsStack = CraftItemStack.asNMSCopy(itemstack);
+        net.minecraft.server.v1_12_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(itemstack);
         nmsStack.setTag(root);
         return CraftItemStack.asBukkitCopy(nmsStack);
     }
 
     public static class Serializer extends LootFunction.Serializer<SetNBT> {
-        protected Serializer() { super(new ResourceLocation("set_nbt"), SetNBT.class); }
+        protected Serializer() {
+            super(NamespacedKey.minecraft("set_nbt"), SetNBT.class);
+        }
 
         @Override
         public void serialize(JsonObject json, SetNBT type, JsonSerializationContext context) {

@@ -41,14 +41,19 @@ public class LootTables extends JavaPlugin {
     }
 
 
-
     @Override
     public void onDisable() {
-
     }
 
+    public static LootTables getInstance() {
+        return instance;
+    }
 
-    public static LootTables getInstance() { return instance; }
-    public CommandManager getCommandManager() { return this.commandManager; }
-    public MenuManager getMenuManager() { return this.menuManager; }
+    public CommandManager getCommandManager() {
+        return this.commandManager;
+    }
+
+    public MenuManager getMenuManager() {
+        return this.menuManager;
+    }
 }

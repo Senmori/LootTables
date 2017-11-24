@@ -28,7 +28,7 @@ public class CommandManager implements CommandExecutor {
     }
 
     public void registerCommand(Subcommand command) {
-        if(!commands.add(command)) {
+        if (! commands.add(command)) {
             plugin.getLogger().log(Level.WARNING, command.getName() + " is already registered!");
         }
     }
@@ -76,6 +76,11 @@ public class CommandManager implements CommandExecutor {
         return true;
     }
 
-    public String getCommandPrefix() { return this.commandPrefix; }
-    public List<Subcommand> getCommands() { return this.commands; }
+    public String getCommandPrefix() {
+        return this.commandPrefix;
+    }
+
+    public List<Subcommand> getCommands() {
+        return this.commands;
+    }
 }

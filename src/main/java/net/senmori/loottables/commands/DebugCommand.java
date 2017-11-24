@@ -1,8 +1,9 @@
 package net.senmori.loottables.commands;
 
-import org.bukkit.craftbukkit.loot.storage.ResourceLocation;
-import org.bukkit.craftbukkit.loot.utils.LootUtils;
+import net.senmori.loottables.LootTables;
+import net.senmori.loottables.loottable.utils.LootUtils;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 
 import java.util.Set;
@@ -20,9 +21,9 @@ public class DebugCommand extends Subcommand {
 
     @Override
     protected void perform() {
-        Block block = getPlayer().getTargetBlock((Set<Material>)null, 5);
-        if(block.getType() != Material.AIR) {
-            LootUtils.setLootTable(block, new ResourceLocation("hunted", "debug"), 0L);
+        Block block = getPlayer().getTargetBlock((Set<Material>) null, 5);
+        if (block.getType() != Material.AIR) {
+            LootUtils.setLootTable(block, new NamespacedKey(LootTables.getInstance(), "debug"), 0L);
         }
     }
 }

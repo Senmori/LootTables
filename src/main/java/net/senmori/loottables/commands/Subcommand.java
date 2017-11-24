@@ -34,18 +34,18 @@ public abstract class Subcommand {
         this.sender = sender;
         this.args = args;
 
-        if(sender instanceof Player) {
-            this.player = (Player)sender;
+        if (sender instanceof Player) {
+            this.player = (Player) sender;
         }
 
-        if(needsPlayer && !isPlayer()) return;
+        if (needsPlayer && ! isPlayer()) return;
 
-        if(args.length < requiredArgs.size()) return;
-        if(!hasPermission()) return;
+        if (args.length < requiredArgs.size()) return;
+        if (! hasPermission()) return;
 
         try {
             perform();
-        } catch(Throwable e) {
+        } catch (Throwable e) {
 
         }
     }
@@ -55,15 +55,15 @@ public abstract class Subcommand {
         StringBuilder ret = new StringBuilder();
 
         ret.append(ChatColor.GREEN + name + " ");
-        for(String s : requiredArgs) {
+        for (String s : requiredArgs) {
             ret.append(ChatColor.GREEN + String.format("<%s> ", s));
         }
 
-        for(String s : optionalArgs) {
+        for (String s : optionalArgs) {
             ret.append(ChatColor.GREEN + String.format("[%s]", s));
         }
 
-        if(displayHelp) {
+        if (displayHelp) {
             ret.append(ChatColor.YELLOW + " - " + ChatColor.GREEN + description);
         }
         return ret.toString();

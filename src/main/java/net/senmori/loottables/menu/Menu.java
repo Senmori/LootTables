@@ -11,7 +11,10 @@ import org.bukkit.inventory.Inventory;
 public abstract class Menu implements IMenu {
 
     public abstract void show(Player player);
+
     public abstract void onClick(InventoryClickEvent event);
+
     public abstract void onDrag(InventoryDragEvent event);
+
     public abstract Inventory getInventory();
 }

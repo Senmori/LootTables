@@ -1,4 +1,4 @@
-package org.bukkit.craftbukkit.loottable.adapter;
+package net.senmori.loottables.loottable.adapter;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

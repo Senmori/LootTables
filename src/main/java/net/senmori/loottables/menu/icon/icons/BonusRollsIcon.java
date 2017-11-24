@@ -1,6 +1,6 @@
 package net.senmori.loottables.menu.icon.icons;
 
-import org.bukkit.craftbukkit.loot.core.LootPool;
+import net.senmori.loottables.loottable.core.LootPool;
 import net.senmori.loottables.menu.Menu;
 import net.senmori.loottables.menu.icon.Icon;
 import org.bukkit.ChatColor;
@@ -30,10 +30,21 @@ public class BonusRollsIcon implements Icon {
     }
 
     @Override
-    public ItemStack getItemStack() { return this.stack; }
-    public LootPool getPool() { return this.pool; }
-    public int getSlot() { return this.slot; }
-    public Menu getParent() { return this.parent; }
+    public ItemStack getItemStack() {
+        return this.stack;
+    }
+
+    public LootPool getPool() {
+        return this.pool;
+    }
+
+    public int getSlot() {
+        return this.slot;
+    }
+
+    public Menu getParent() {
+        return this.parent;
+    }
 
 
     @Override

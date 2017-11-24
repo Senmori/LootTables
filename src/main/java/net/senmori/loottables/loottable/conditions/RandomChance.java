@@ -1,11 +1,11 @@
-package org.bukkit.craftbukkit.loottable.conditions;
+package net.senmori.loottables.loottable.conditions;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import org.bukkit.craftbukkit.loottable.core.LootContext;
-import org.bukkit.craftbukkit.loottable.utils.JsonUtils;
-import org.bukkit.util.ResourceLocation;
+import net.senmori.loottables.loottable.core.LootContext;
+import net.senmori.loottables.loottable.utils.JsonUtils;
+import org.bukkit.NamespacedKey;
 
 import java.util.Random;
 
@@ -18,21 +18,29 @@ public class RandomChance implements LootCondition {
      *
      * @param chance Success rate as a number between 0.0 - 1.0
      */
-    public RandomChance(float chance) { this.chance = chance; }
+    public RandomChance(float chance) {
+        this.chance = chance;
+    }
 
     /** Set the new success rate */
-    public void setChance(float chance) { this.chance = chance; }
+    public void setChance(float chance) {
+        this.chance = chance;
+    }
 
     @Override
     public boolean testCondition(Random rand, LootContext context) {
         return rand.nextFloat() < this.chance;
     }
 
-    public float getChance() { return this.chance; }
+    public float getChance() {
+        return this.chance;
+    }
 
 
     public static class Serializer extends LootCondition.Serializer<RandomChance> {
-        protected Serializer() { super(new ResourceLocation("random_chance"), RandomChance.class); }
+        protected Serializer() {
+            super(NamespacedKey.minecraft("random_chance"), RandomChance.class);
+        }
 
         @Override
         public void serialize(JsonObject json, RandomChance type, JsonSerializationContext context) {

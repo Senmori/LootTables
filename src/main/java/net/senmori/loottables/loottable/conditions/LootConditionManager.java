@@ -1,4 +1,4 @@
-package org.bukkit.craftbukkit.loottable.conditions;
+package net.senmori.loottables.loottable.conditions;
 
 import com.google.common.collect.Maps;
 import com.google.gson.JsonDeserializationContext;
@@ -7,10 +7,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSyntaxException;
-import org.bukkit.craftbukkit.loottable.adapter.InheritanceAdapter;
-import org.bukkit.craftbukkit.loottable.core.LootContext;
-import org.bukkit.craftbukkit.loottable.utils.JsonUtils;
-import org.bukkit.util.ResourceLocation;
+import net.senmori.loottables.loottable.adapter.InheritanceAdapter;
+import net.senmori.loottables.loottable.core.LootContext;
+import net.senmori.loottables.loottable.utils.JsonUtils;
+import org.bukkit.NamespacedKey;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -20,10 +20,11 @@ import java.util.Random;
 
 public class LootConditionManager {
 
-    private static Map<ResourceLocation, LootCondition.Serializer<?>> nameToSerializerMap = Maps.newHashMap();
+    private static Map<NamespacedKey, LootCondition.Serializer<?>> nameToSerializerMap = Maps.newHashMap();
     private static Map<Class<? extends LootCondition>, LootCondition.Serializer<?>> classToSerializerMap = Maps.newHashMap();
 
-    public LootConditionManager() {}
+    public LootConditionManager() {
+    }
 
     static {
         registerCondition(new KilledByPlayer.Serializer());
@@ -50,15 +51,15 @@ public class LootConditionManager {
         if (conditions == null || conditions.isEmpty()) return true;
 
         for (LootCondition c : conditions) {
-            if (!c.testCondition(rand, context)) return false;
+            if (! c.testCondition(rand, context)) return false;
         }
         return true;
     }
 
 
-    public static LootCondition.Serializer<?> getSerializerForName(ResourceLocation location) {
+    public static LootCondition.Serializer<?> getSerializerForName(NamespacedKey location) {
         LootCondition.Serializer serializer = null;
-        for (ResourceLocation name : nameToSerializerMap.keySet()) {
+        for (NamespacedKey name : nameToSerializerMap.keySet()) {
             if (name.equals(location)) {
                 serializer = nameToSerializerMap.get(name);
                 break;
@@ -80,7 +81,8 @@ public class LootConditionManager {
 
 
     public static class Serializer extends InheritanceAdapter<LootCondition> {
-        public Serializer() {}
+        public Serializer() {
+        }
 
         @Override
         public JsonElement serialize(LootCondition lootCondition, Type type, JsonSerializationContext context) {
@@ -97,7 +99,7 @@ public class LootConditionManager {
         public LootCondition deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException {
             JsonObject json = JsonUtils.getJsonObject(jsonElement, "condition");
             String name = JsonUtils.getString(json, "condition");
-            ResourceLocation location = new ResourceLocation(name);
+            NamespacedKey location = NamespacedKey.minecraft(name);
             LootCondition.Serializer serializer;
             try {
                 serializer = LootConditionManager.getSerializerForName(location);

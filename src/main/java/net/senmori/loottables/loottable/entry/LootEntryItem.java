@@ -1,16 +1,16 @@
-package org.bukkit.craftbukkit.loottable.entry;
+package net.senmori.loottables.loottable.entry;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import org.bukkit.craftbukkit.loottable.conditions.LootCondition;
-import org.bukkit.craftbukkit.loottable.conditions.LootConditionManager;
-import org.bukkit.craftbukkit.loottable.core.LootContext;
-import org.bukkit.craftbukkit.loottable.functions.LootFunction;
-import org.bukkit.craftbukkit.loottable.utils.JsonUtils;
-import org.bukkit.craftbukkit.loottable.utils.LootUtils;
+import net.senmori.loottables.loottable.conditions.LootCondition;
+import net.senmori.loottables.loottable.conditions.LootConditionManager;
+import net.senmori.loottables.loottable.core.LootContext;
+import net.senmori.loottables.loottable.functions.LootFunction;
+import net.senmori.loottables.loottable.utils.JsonUtils;
+import net.senmori.loottables.loottable.utils.LootUtils;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -77,13 +77,15 @@ public class LootEntryItem extends LootEntry {
         return LootUtils.getNameForItem(CraftItemStack.asNMSCopy(new ItemStack(material)));
     }
 
-    public List<LootFunction> getFunctions() { return this.functions; }
+    public List<LootFunction> getFunctions() {
+        return this.functions;
+    }
 
 
     @Override
     protected void serialize(JsonObject json, JsonSerializationContext context) {
         json.addProperty("name", this.toMinecraftName()); // replace just in case wonkiness
-        if (this.functions != null && !this.functions.isEmpty()) {
+        if (this.functions != null && ! this.functions.isEmpty()) {
             json.add("functions", context.serialize(this.functions));
         }
     }
@@ -92,7 +94,7 @@ public class LootEntryItem extends LootEntry {
     public static LootEntryItem deserialize(JsonObject object, JsonDeserializationContext context, int weight, int quality, List<LootCondition> conditions) {
         ItemStack stack = JsonUtils.getItem(object, "name");
         LootFunction[] functions;
-        if(object.has("functions")) {
+        if (object.has("functions")) {
             functions = JsonUtils.deserializeClass(object, "functions", context, LootFunction[].class);
         } else {
             functions = new LootFunction[0];

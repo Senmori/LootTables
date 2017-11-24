@@ -1,19 +1,19 @@
-package org.bukkit.craftbukkit.loottable.conditions;
+package net.senmori.loottables.loottable.conditions;
 
 import com.google.common.collect.Maps;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import org.bukkit.craftbukkit.loottable.core.EntityTarget;
-import org.bukkit.craftbukkit.loottable.core.LootContext;
-import org.bukkit.craftbukkit.loottable.core.RandomValueRange;
-import org.bukkit.craftbukkit.loottable.utils.JsonUtils;
+import net.senmori.loottables.loottable.core.EntityTarget;
+import net.senmori.loottables.loottable.core.LootContext;
+import net.senmori.loottables.loottable.core.RandomValueRange;
+import net.senmori.loottables.loottable.utils.JsonUtils;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.util.ResourceLocation;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -30,8 +30,8 @@ public class EntityHasScore implements LootCondition {
     /**
      * Test the scoreboard scores of an entity.
      *
-     * @param scores the scores to check.
-     *               Key name is the objective while the value is the exact score(or range of scores) required.
+     * @param scores the scores to check. Key name is the objective while the value is the exact score(or range of
+     *               scores) required.
      * @param target the {@link EntityTarget} entity to check for the condition.
      */
     public EntityHasScore(Map<String, RandomValueRange> scores, EntityTarget target) {
@@ -40,15 +40,27 @@ public class EntityHasScore implements LootCondition {
     }
 
     /** Set the new {@link EntityTarget} to check against */
-    public void setTarget(EntityTarget target) { this.target = target; }
+    public void setTarget(EntityTarget target) {
+        this.target = target;
+    }
 
     /** Add a new Scoreboard score, and range to check */
-    public void addScore(String scoreName, RandomValueRange scoreRange) { scores.put(scoreName, scoreRange); }
+    public void addScore(String scoreName, RandomValueRange scoreRange) {
+        scores.put(scoreName, scoreRange);
+    }
 
 
-    public EntityTarget getTarget() { return this.target; }
-    public Map<String, RandomValueRange> getScores() { return this.scores; }
-    public RandomValueRange getScore(String name) { return scores.get(name); }
+    public EntityTarget getTarget() {
+        return this.target;
+    }
+
+    public Map<String, RandomValueRange> getScores() {
+        return this.scores;
+    }
+
+    public RandomValueRange getScore(String name) {
+        return scores.get(name);
+    }
 
     @Override
     public boolean testCondition(Random rand, LootContext context) {
@@ -60,7 +72,9 @@ public class EntityHasScore implements LootCondition {
         Map.Entry entry;
 
         do {
-            if (!iter.hasNext()) { return true; }
+            if (! iter.hasNext()) {
+                return true;
+            }
             entry = (Map.Entry) iter.next();
         }
         while (entityHasScore(entity, globalScoreboard, (String) entry.getKey(), (RandomValueRange) entry.getValue()));
@@ -96,7 +110,9 @@ public class EntityHasScore implements LootCondition {
     }
 
     public static class Serializer extends LootCondition.Serializer<EntityHasScore> {
-        protected Serializer() { super(new ResourceLocation("entity_scores"), EntityHasScore.class); }
+        protected Serializer() {
+            super(NamespacedKey.minecraft("entity_scores"), EntityHasScore.class);
+        }
 
         @Override
         public void serialize(JsonObject json, EntityHasScore type, JsonSerializationContext context) {

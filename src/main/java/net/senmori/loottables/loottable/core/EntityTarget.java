@@ -1,4 +1,4 @@
-package org.bukkit.craftbukkit.loottable.core;
+package net.senmori.loottables.loottable.core;
 
 
 public enum EntityTarget {
@@ -10,7 +10,8 @@ public enum EntityTarget {
     KILLER_PLAYER;
 
 
-    EntityTarget() {}
+    EntityTarget() {
+    }
 
     public static EntityTarget fromString(String name) {
         for (EntityTarget target : EntityTarget.values()) {

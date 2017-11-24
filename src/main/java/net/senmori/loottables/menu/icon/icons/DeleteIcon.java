@@ -1,9 +1,9 @@
 package net.senmori.loottables.menu.icon.icons;
 
-import org.bukkit.craftbukkit.loot.core.LootPool;
-import org.bukkit.craftbukkit.loot.entry.LootEntry;
-import org.bukkit.craftbukkit.loot.entry.LootEntryItem;
-import org.bukkit.craftbukkit.loot.entry.LootEntryTable;
+import net.senmori.loottables.loottable.core.LootPool;
+import net.senmori.loottables.loottable.entry.LootEntry;
+import net.senmori.loottables.loottable.entry.LootEntryItem;
+import net.senmori.loottables.loottable.entry.LootEntryTable;
 import net.senmori.loottables.menu.Menu;
 import net.senmori.loottables.menu.icon.Icon;
 import org.bukkit.ChatColor;
@@ -27,10 +27,10 @@ public class DeleteIcon implements Icon {
     private ItemStack stack;
 
     /**
-     * This Icon will delete an entry dropped onto it.<br>
-     *     It will only delete items that are from the parent Menu.<br>
-     * @param slot - the slot index this Icon is in
-     * @param pool - the {@link LootPool} this Icon relates to.
+     * This Icon will delete an entry dropped onto it.<br> It will only delete items that are from the parent Menu.<br>
+     *
+     * @param slot   - the slot index this Icon is in
+     * @param pool   - the {@link LootPool} this Icon relates to.
      * @param parent - the {@link Menu} that holds this Icon
      */
     public DeleteIcon(int slot, LootPool pool, Menu parent) {
@@ -46,9 +46,17 @@ public class DeleteIcon implements Icon {
     }
 
     @Override
-    public ItemStack getItemStack() { return this.stack; }
-    public int getSlot() { return this.slot; }
-    public Menu getParent() { return this.parent; }
+    public ItemStack getItemStack() {
+        return this.stack;
+    }
+
+    public int getSlot() {
+        return this.slot;
+    }
+
+    public Menu getParent() {
+        return this.parent;
+    }
 
     @Override
     public void onClick(Player player, int clickedSlot, ItemStack clickedItem, Inventory clickedInventory, ClickType type) {
@@ -65,7 +73,7 @@ public class DeleteIcon implements Icon {
         if (stack == null || stack.getType().equals(Material.AIR)) return false;
         for (LootEntry entry : pool.getEntries()) {
             if (entry instanceof LootEntryItem) {
-                if (((LootEntryItem) entry).getMaterial().equals(stack.getType())) return true;
+                if (( (LootEntryItem) entry ).getMaterial().equals(stack.getType())) return true;
             }
             if (entry instanceof LootEntryTable) {
                 if (stack.getType().equals(Material.PAPER)) return true;

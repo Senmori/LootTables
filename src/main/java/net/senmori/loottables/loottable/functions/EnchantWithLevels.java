@@ -1,21 +1,22 @@
-package org.bukkit.craftbukkit.loottable.functions;
+package net.senmori.loottables.loottable.functions;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import org.bukkit.craftbukkit.loottable.conditions.LootCondition;
-import org.bukkit.craftbukkit.loottable.core.LootContext;
-import org.bukkit.craftbukkit.loottable.core.RandomValueRange;
-import org.bukkit.craftbukkit.loottable.utils.EnchantmentHelper;
-import org.bukkit.craftbukkit.loottable.utils.JsonUtils;
+import net.senmori.loottables.loottable.conditions.LootCondition;
+import net.senmori.loottables.loottable.core.LootContext;
+import net.senmori.loottables.loottable.core.RandomValueRange;
+import net.senmori.loottables.loottable.utils.EnchantmentHelper;
+import net.senmori.loottables.loottable.utils.JsonUtils;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.ResourceLocation;
 
 import java.util.List;
 import java.util.Random;
 
 /**
- * Enchants the item with the specified enchantment level (roughly equivalent to using an enchantment table at that level).
+ * Enchants the item with the specified enchantment level (roughly equivalent to using an enchantment table at that
+ * level).
  */
 public class EnchantWithLevels extends LootFunction {
 
@@ -23,12 +24,13 @@ public class EnchantWithLevels extends LootFunction {
     private boolean treasure;
 
     /**
-     * Enchants the item with the specified enchantment level (roughly equivalent to using an enchantment table at that level).
+     * Enchants the item with the specified enchantment level (roughly equivalent to using an enchantment table at that
+     * level).
      *
-     * @param randomLevel the range of levels to pick from.
-     *                    To specify a specific level, use the same number for both min & max.
-     * @param treasure if this enchantment can be a treasure enchantment.
-     * @param conditions the list of conditions that must be passed before enchanting.
+     * @param randomLevel the range of levels to pick from. To specify a specific level, use the same number for both
+     *                    min & max.
+     * @param treasure    if this enchantment can be a treasure enchantment.
+     * @param conditions  the list of conditions that must be passed before enchanting.
      */
     public EnchantWithLevels(RandomValueRange randomLevel, boolean treasure, List<LootCondition> conditions) {
         super(conditions);
@@ -37,11 +39,11 @@ public class EnchantWithLevels extends LootFunction {
     }
 
     /**
-     * Enchants the item with the specified enchantment level (roughly equivalent to using an enchantment table at that level).
-     * {@link LootCondition}s are null-valued with this constructor.
+     * Enchants the item with the specified enchantment level (roughly equivalent to using an enchantment table at that
+     * level). {@link LootCondition}s are null-valued with this constructor.
      *
      * @param randomLevel the range of levels to pick from.
-     * @param treasure if this enchantment can be a treasure enchantment.
+     * @param treasure    if this enchantment can be a treasure enchantment.
      */
     public EnchantWithLevels(RandomValueRange randomLevel, boolean treasure) {
         this(randomLevel, treasure, null);
@@ -60,12 +62,14 @@ public class EnchantWithLevels extends LootFunction {
     }
 
     /** Set new minimum and maximum levels for th enchantment */
-    public void setNewLevels(int min, int max) {
+    public void setLimits(int min, int max) {
         randomLevel = new RandomValueRange(min, max);
     }
 
     /** Set if treasure enchantments are allowed as possible enchantments */
-    public void setTreasureEnchantsAllowed(boolean allowed) { this.treasure = allowed; }
+    public void setTreasureEnchantsAllowed(boolean allowed) {
+        this.treasure = allowed;
+    }
 
     @Override
     public ItemStack apply(ItemStack itemstack, Random rand, LootContext context) {
@@ -73,12 +77,19 @@ public class EnchantWithLevels extends LootFunction {
     }
 
 
-    public RandomValueRange getRandomLevelRange() { return this.randomLevel; }
-    public boolean getTreasureEnchantmentsAllowed() { return this.treasure; }
+    public RandomValueRange getRandomLevelRange() {
+        return this.randomLevel;
+    }
+
+    public boolean getTreasureEnchantmentsAllowed() {
+        return this.treasure;
+    }
 
 
     public static class Serializer extends LootFunction.Serializer<EnchantWithLevels> {
-        protected Serializer() { super(new ResourceLocation("enchant_with_levels"), EnchantWithLevels.class); }
+        protected Serializer() {
+            super(NamespacedKey.minecraft("enchant_with_levels"), EnchantWithLevels.class);
+        }
 
         @Override
         public void serialize(JsonObject json, EnchantWithLevels type, JsonSerializationContext context) {

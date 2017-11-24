@@ -1,15 +1,15 @@
-package org.bukkit.craftbukkit.loottable.functions;
+package net.senmori.loottables.loottable.functions;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
+import net.senmori.loottables.loottable.conditions.LootCondition;
+import net.senmori.loottables.loottable.core.LootContext;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.loottable.conditions.LootCondition;
-import org.bukkit.craftbukkit.loottable.core.LootContext;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
-import org.bukkit.util.ResourceLocation;
 
 import java.util.List;
 import java.util.Random;
@@ -19,9 +19,13 @@ import java.util.Random;
  */
 public class Smelt extends LootFunction {
 
-    public Smelt(List<LootCondition> conditions) { super(conditions); }
+    public Smelt(List<LootCondition> conditions) {
+        super(conditions);
+    }
 
-    public Smelt() { this(null); }
+    public Smelt() {
+        this(null);
+    }
 
     @Override
     public ItemStack apply(ItemStack itemstack, Random rand, LootContext context) {
@@ -37,7 +41,9 @@ public class Smelt extends LootFunction {
 
 
     public static class Serializer extends LootFunction.Serializer<Smelt> {
-        protected Serializer() { super(new ResourceLocation("furnace_smelt"), Smelt.class); }
+        protected Serializer() {
+            super(NamespacedKey.minecraft("furnace_smelt"), Smelt.class);
+        }
 
         @Override
         public void serialize(JsonObject json, Smelt type, JsonSerializationContext context) {

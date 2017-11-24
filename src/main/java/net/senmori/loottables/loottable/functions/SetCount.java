@@ -1,14 +1,14 @@
-package org.bukkit.craftbukkit.loottable.functions;
+package net.senmori.loottables.loottable.functions;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import org.bukkit.craftbukkit.loottable.conditions.LootCondition;
-import org.bukkit.craftbukkit.loottable.core.LootContext;
-import org.bukkit.craftbukkit.loottable.core.RandomValueRange;
-import org.bukkit.craftbukkit.loottable.utils.JsonUtils;
+import net.senmori.loottables.loottable.conditions.LootCondition;
+import net.senmori.loottables.loottable.core.LootContext;
+import net.senmori.loottables.loottable.core.RandomValueRange;
+import net.senmori.loottables.loottable.utils.JsonUtils;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.ResourceLocation;
 
 import java.util.List;
 import java.util.Random;
@@ -20,7 +20,7 @@ public class SetCount extends LootFunction {
     /**
      * Sets the stack size.
      *
-     * @param range the minimum and maximum range of the stack size
+     * @param range      the minimum and maximum range of the stack size
      * @param conditions the {@link LootCondition}s that will be applied after calculation.
      */
     public SetCount(RandomValueRange range, List<LootCondition> conditions) {
@@ -29,8 +29,7 @@ public class SetCount extends LootFunction {
     }
 
     /**
-     * Sets the stack size.
-     * {@link LootCondition}s are null-valued with this constructor.
+     * Sets the stack size. {@link LootCondition}s are null-valued with this constructor.
      *
      * @param range the minimum and maximum range of the stack size
      */
@@ -61,10 +60,14 @@ public class SetCount extends LootFunction {
         return itemstack;
     }
 
-    public RandomValueRange getRange() { return this.range; }
+    public RandomValueRange getRange() {
+        return this.range;
+    }
 
     public static class Serializer extends LootFunction.Serializer<SetCount> {
-        protected Serializer() { super(new ResourceLocation("set_count"), SetCount.class); }
+        protected Serializer() {
+            super(NamespacedKey.minecraft("set_count"), SetCount.class);
+        }
 
         @Override
         public void serialize(JsonObject json, SetCount type, JsonSerializationContext context) {

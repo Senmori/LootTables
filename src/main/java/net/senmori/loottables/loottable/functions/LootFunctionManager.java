@@ -1,4 +1,4 @@
-package org.bukkit.craftbukkit.loottable.functions;
+package net.senmori.loottables.loottable.functions;
 
 import com.google.common.collect.Maps;
 import com.google.gson.JsonDeserializationContext;
@@ -7,10 +7,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSyntaxException;
-import org.bukkit.craftbukkit.loottable.adapter.InheritanceAdapter;
-import org.bukkit.craftbukkit.loottable.conditions.LootCondition;
-import org.bukkit.craftbukkit.loottable.utils.JsonUtils;
-import org.bukkit.util.ResourceLocation;
+import net.senmori.loottables.loottable.adapter.InheritanceAdapter;
+import net.senmori.loottables.loottable.conditions.LootCondition;
+import net.senmori.loottables.loottable.utils.JsonUtils;
+import org.bukkit.NamespacedKey;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -18,7 +18,7 @@ import java.util.Map;
 
 
 public class LootFunctionManager {
-    private static Map<ResourceLocation, LootFunction.Serializer<?>> nameToSerializerMap = Maps.newHashMap();
+    private static Map<NamespacedKey, LootFunction.Serializer<?>> nameToSerializerMap = Maps.newHashMap();
     private static Map<Class<? extends LootFunction>, LootFunction.Serializer<?>> classToSerializerMap = Maps.newHashMap();
 
     public LootFunctionManager() {
@@ -37,7 +37,7 @@ public class LootFunctionManager {
     }
 
     public static <T extends LootFunction> void registerFunction(LootFunction.Serializer<? extends T> function) {
-        ResourceLocation resourcelocation = function.getName();
+        NamespacedKey resourcelocation = function.getName();
         Class funcClass = function.getFunctionClass();
         if (nameToSerializerMap.containsKey(resourcelocation)) {
             throw new IllegalArgumentException("Can\'t re-register item function name " + resourcelocation);
@@ -49,9 +49,9 @@ public class LootFunctionManager {
         }
     }
 
-    public static LootFunction.Serializer<?> getSerializerForName(ResourceLocation location) {
+    public static LootFunction.Serializer<?> getSerializerForName(NamespacedKey location) {
         LootFunction.Serializer serializer = null;
-        for (ResourceLocation name : nameToSerializerMap.keySet()) {
+        for (NamespacedKey name : nameToSerializerMap.keySet()) {
             if (name.equals(location)) {
                 serializer = nameToSerializerMap.get(name);
                 break;
@@ -75,7 +75,8 @@ public class LootFunctionManager {
 
 
     public static class Serializer extends InheritanceAdapter<LootFunction> {
-        public Serializer() {}
+        public Serializer() {
+        }
 
         @Override
         public JsonElement serialize(LootFunction lootFunction, Type type, JsonSerializationContext context) {
@@ -83,7 +84,7 @@ public class LootFunctionManager {
             JsonObject json = new JsonObject();
             json.addProperty("function", serializer.getName().toString());
             serializer.serialize(json, lootFunction, context);
-            if (lootFunction.getConditions() != null && !lootFunction.getConditions().isEmpty()) {
+            if (lootFunction.getConditions() != null && ! lootFunction.getConditions().isEmpty()) {
                 json.add("conditions", context.serialize(lootFunction.getConditions()));
             }
             return json;
@@ -94,7 +95,7 @@ public class LootFunctionManager {
         @Override
         public LootFunction deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jsonObject = JsonUtils.getJsonObject(jsonElement, "function");
-            ResourceLocation location = new ResourceLocation(JsonUtils.getString(jsonObject, "function"));
+            NamespacedKey location = NamespacedKey.minecraft(JsonUtils.getString(jsonObject, "function"));
             LootFunction.Serializer serializer;
             try {
                 serializer = LootFunctionManager.getSerializerForName(location);

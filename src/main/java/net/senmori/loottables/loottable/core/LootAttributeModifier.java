@@ -1,4 +1,4 @@
-package org.bukkit.craftbukkit.loottable.core;
+package net.senmori.loottables.loottable.core;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSyntaxException;
-import org.bukkit.craftbukkit.loottable.utils.JsonUtils;
+import net.senmori.loottables.loottable.utils.JsonUtils;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.EquipmentSlot;
 
@@ -28,14 +28,14 @@ public class LootAttributeModifier {
     private Set<EquipmentSlot> equipmentSlots = new HashSet<EquipmentSlot>();
 
     /**
-     * Special helper class for serializing/deserializing {@link AttributeModifier}s into loot tables.
-     * Created in the same manner as normal {@link AttributeModifier}s.
+     * Special helper class for serializing/deserializing {@link AttributeModifier}s into loot tables. Created in the
+     * same manner as normal {@link AttributeModifier}s.
      *
-     * @param modifierName Name of the modifier
-     * @param attributeName Name of this modifier to act upon
-     * @param operation Must be either "addition", "multiply_base", or "multiply_total"
-     * @param randomAmount Specifies the exact amount(or a range) of change to the modifier
-     * @param uuid Optional: UUID of the modifier.
+     * @param modifierName        Name of the modifier
+     * @param attributeName       Name of this modifier to act upon
+     * @param operation           Must be either "addition", "multiply_base", or "multiply_total"
+     * @param randomAmount        Specifies the exact amount(or a range) of change to the modifier
+     * @param uuid                Optional: UUID of the modifier.
      * @param validEquipmentSlots Slots the item must be in for the modifier to take effect.
      */
     public LootAttributeModifier(String modifierName, String attributeName, int operation, RandomValueRange randomAmount, UUID uuid, Set<EquipmentSlot> validEquipmentSlots) {
@@ -48,14 +48,14 @@ public class LootAttributeModifier {
     }
 
     /**
-     * Create {@link LootAttributeModifier} from an existing {@link AttributeModifier}.
-     * Specifies the slots this modifier will be active in.
+     * Create {@link LootAttributeModifier} from an existing {@link AttributeModifier}. Specifies the slots this
+     * modifier will be active in.
      *
-     * @param modifier the modifier to import.
+     * @param modifier   the modifier to import.
      * @param validSlots the slots this modifier will be active in.
      */
     public LootAttributeModifier(AttributeModifier modifier, Set<EquipmentSlot> validSlots) {
-        this(modifier.getName(), modifier.getName(), modifier.getOperation().ordinal(), new RandomValueRange((float)modifier.getAmount()), modifier.getUniqueId(), validSlots);
+        this(modifier.getName(), modifier.getName(), modifier.getOperation().ordinal(), new RandomValueRange((float) modifier.getAmount()), modifier.getUniqueId(), validSlots);
     }
 
     /** Set the new amount(s) of change to the modifier */
@@ -67,7 +67,7 @@ public class LootAttributeModifier {
     /** Returns a new instance of {@link org.bukkit.attribute.AttributeModifier} */
     public AttributeModifier getAttributeModifier() {
         AttributeModifier.Operation operation = null;
-        switch(this.operation) {
+        switch (this.operation) {
             case 0:
                 operation = AttributeModifier.Operation.ADD_NUMBER;
                 break;
@@ -83,12 +83,30 @@ public class LootAttributeModifier {
         }
         return new AttributeModifier(modifierName, amount.generateInt(new Random()), operation);
     }
-    public String getModifierName() { return this.modifierName; }
-    public String getAttributeName() { return this.attributeName; }
-    public int getOperation() { return this.operation; }
-    public RandomValueRange getAmount() { return this.amount; }
-    public UUID getUuid() { return this.uuid; }
-    public Set<EquipmentSlot> getEquipmentSlots() { return this.equipmentSlots; }
+
+    public String getModifierName() {
+        return this.modifierName;
+    }
+
+    public String getAttributeName() {
+        return this.attributeName;
+    }
+
+    public int getOperation() {
+        return this.operation;
+    }
+
+    public RandomValueRange getAmount() {
+        return this.amount;
+    }
+
+    public UUID getUuid() {
+        return this.uuid;
+    }
+
+    public Set<EquipmentSlot> getEquipmentSlots() {
+        return this.equipmentSlots;
+    }
 
 
     public JsonObject serialize(JsonSerializationContext context) {
@@ -122,7 +140,7 @@ public class LootAttributeModifier {
         if (JsonUtils.isString(json, "slot")) {
             slots = new EquipmentSlot[]{EquipmentSlot.valueOf(JsonUtils.getString(json, "slot"))};
         } else {
-            if (!(JsonUtils.isJsonArray(json, "slot"))) {
+            if (! ( JsonUtils.isJsonArray(json, "slot") )) {
                 throw new JsonSyntaxException("Invalid or missing attribute modifier slot; must be either a string or array of strings");
             }
 

@@ -1,6 +1,6 @@
 package net.senmori.loottables.menu.icon.icons;
 
-import org.bukkit.craftbukkit.loot.entry.LootEntryItem;
+import net.senmori.loottables.loottable.entry.LootEntryItem;
 import net.senmori.loottables.menu.Menu;
 import net.senmori.loottables.menu.icon.Icon;
 import org.bukkit.ChatColor;
@@ -23,18 +23,14 @@ public class EntryIcon implements Icon {
     protected int slot;
 
     /**
-     * This {@link Icon} is used to display the related {@link ItemStack} a {@link LootEntryItem} will be.<br>
-     * Clicking this {@link Icon} will display options to increase the {@link LootEntryItem#weight} and/or {@link LootEntryItem#quality} of an entry.<br>
-     * You cannot add/remove conditions or functions. Only the entry itself.<br>
-     * Click options:<br>
-     * LEFT: increase weight<br>
-     * SHIFT_LEFT: decrease weight<br>
-     * RIGHT: increase quality<br>
-     * SHIFT_RIGHT: decrease quality<br>
-     * MIDDLE: reset weight & quality to 1 and 0, respectively
+     * This {@link Icon} is used to display the related {@link ItemStack} a {@link LootEntryItem} will be.<br> Clicking
+     * this {@link Icon} will display options to increase the {@link LootEntryItem#weight} and/or {@link
+     * LootEntryItem#quality} of an entry.<br> You cannot add/remove conditions or functions. Only the entry itself.<br>
+     * Click options:<br> LEFT: increase weight<br> SHIFT_LEFT: decrease weight<br> RIGHT: increase quality<br>
+     * SHIFT_RIGHT: decrease quality<br> MIDDLE: reset weight & quality to 1 and 0, respectively
      *
-     * @param slot - the slot index
-     * @param entry - the {@link LootEntryItem} this Icon relates to.
+     * @param slot   - the slot index
+     * @param entry  - the {@link LootEntryItem} this Icon relates to.
      * @param parent - the {@link Menu} that holds this Icon
      */
     public EntryIcon(int slot, LootEntryItem entry, Menu parent) {
@@ -46,10 +42,21 @@ public class EntryIcon implements Icon {
     }
 
     @Override
-    public ItemStack getItemStack() { return this.itemStack; }
-    public int getSlot() { return this.slot; }
-    public LootEntryItem getEntry() { return this.entry; }
-    public Menu getHolder() { return this.parent; }
+    public ItemStack getItemStack() {
+        return this.itemStack;
+    }
+
+    public int getSlot() {
+        return this.slot;
+    }
+
+    public LootEntryItem getEntry() {
+        return this.entry;
+    }
+
+    public Menu getHolder() {
+        return this.parent;
+    }
 
 
     @Override

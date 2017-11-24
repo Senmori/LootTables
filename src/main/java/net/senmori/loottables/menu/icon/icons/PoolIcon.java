@@ -1,6 +1,6 @@
 package net.senmori.loottables.menu.icon.icons;
 
-import org.bukkit.craftbukkit.loot.core.LootPool;
+import net.senmori.loottables.loottable.core.LootPool;
 import net.senmori.loottables.menu.icon.Icon;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -28,12 +28,18 @@ public class PoolIcon implements Icon {
         itemStack.setItemMeta(meta);
     }
 
-    public LootPool getLootPool() { return this.pool; }
+    public LootPool getLootPool() {
+        return this.pool;
+    }
 
-    public int getSlot() { return this.slot; }
+    public int getSlot() {
+        return this.slot;
+    }
 
     @Override
-    public ItemStack getItemStack() { return this.itemStack; }
+    public ItemStack getItemStack() {
+        return this.itemStack;
+    }
 
     @Override
     public void onClick(Player player, int clickedSlot, ItemStack clickedItem, Inventory clickedInventory, ClickType type) {

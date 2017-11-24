@@ -1,14 +1,14 @@
-package org.bukkit.craftbukkit.loottable.properties;
+package net.senmori.loottables.loottable.properties;
 
 import com.google.common.collect.Maps;
-import org.bukkit.util.ResourceLocation;
+import org.bukkit.NamespacedKey;
 
 import java.util.Map;
 
 
 public class EntityPropertyManager {
 
-    private static Map<ResourceLocation, EntityProperty.Serializer<?>> nameToSerializerMap = Maps.newHashMap();
+    private static Map<NamespacedKey, EntityProperty.Serializer<?>> nameToSerializerMap = Maps.newHashMap();
     private static Map<Class<? extends EntityProperty>, EntityProperty.Serializer<?>> classToSerializerMap = Maps.newHashMap();
 
     public EntityPropertyManager() {
@@ -19,7 +19,7 @@ public class EntityPropertyManager {
     }
 
     public static <T extends EntityProperty> void registerProperty(EntityProperty.Serializer<? extends T> property) {
-        ResourceLocation resourcelocation = property.getName();
+        NamespacedKey resourcelocation = property.getName();
         Class oclass = property.getPropertyClass();
         if (nameToSerializerMap.containsKey(resourcelocation)) {
             throw new IllegalArgumentException("Can\'t re-register entity property name " + resourcelocation);
@@ -31,9 +31,9 @@ public class EntityPropertyManager {
         }
     }
 
-    public static EntityProperty.Serializer<?> getSerializerForName(ResourceLocation name) {
+    public static EntityProperty.Serializer<?> getSerializerForName(NamespacedKey name) {
         EntityProperty.Serializer serializer = nameToSerializerMap.get(name);
-        if(serializer == null) {
+        if (serializer == null) {
             throw new IllegalArgumentException("Unknown loot entity property \'" + name + "\'");
         } else {
             return serializer;
@@ -42,7 +42,7 @@ public class EntityPropertyManager {
 
     public static <T extends EntityProperty> EntityProperty.Serializer<T> getSerializerFor(T property) {
         EntityProperty.Serializer serializer = classToSerializerMap.get(property.getClass());
-        if(serializer == null) {
+        if (serializer == null) {
             throw new IllegalArgumentException("Unknown loot entity property " + property);
         } else {
             return serializer;

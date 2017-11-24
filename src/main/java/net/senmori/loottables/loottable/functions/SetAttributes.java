@@ -1,4 +1,4 @@
-package org.bukkit.craftbukkit.loottable.functions;
+package net.senmori.loottables.loottable.functions;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -6,14 +6,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSyntaxException;
+import net.senmori.loottables.loottable.conditions.LootCondition;
+import net.senmori.loottables.loottable.core.LootAttributeModifier;
+import net.senmori.loottables.loottable.core.LootContext;
+import net.senmori.loottables.loottable.utils.JsonUtils;
+import net.senmori.loottables.loottable.utils.NBTUtils;
+import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.craftbukkit.loottable.conditions.LootCondition;
-import org.bukkit.craftbukkit.loottable.core.LootAttributeModifier;
-import org.bukkit.craftbukkit.loottable.core.LootContext;
-import org.bukkit.craftbukkit.loottable.utils.JsonUtils;
-import org.bukkit.craftbukkit.loottable.utils.NBTUtils;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.ResourceLocation;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -29,7 +29,7 @@ public class SetAttributes extends LootFunction {
     /**
      * Add {@link LootAttributeModifier}(s) to an item.
      *
-     * @param modifiers the {@link LootAttributeModifier}(s) to add.
+     * @param modifiers  the {@link LootAttributeModifier}(s) to add.
      * @param conditions the {@link LootCondition}(s) that must be passed before modification.
      */
     public SetAttributes(List<LootAttributeModifier> modifiers, List<LootCondition> conditions) {
@@ -80,11 +80,15 @@ public class SetAttributes extends LootFunction {
     }
 
 
-    public List<LootAttributeModifier> getModifiers() { return this.modifiers; }
+    public List<LootAttributeModifier> getModifiers() {
+        return this.modifiers;
+    }
 
 
     public static class Serializer extends LootFunction.Serializer<SetAttributes> {
-        protected Serializer() { super(new ResourceLocation("set_attributes"), SetAttributes.class); }
+        protected Serializer() {
+            super(NamespacedKey.minecraft("set_attributes"), SetAttributes.class);
+        }
 
         @Override
         public void serialize(JsonObject json, SetAttributes type, JsonSerializationContext context) {

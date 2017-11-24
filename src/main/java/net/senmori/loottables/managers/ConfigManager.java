@@ -24,12 +24,12 @@ public class ConfigManager {
     }
 
     private void init() {
-        if(!plugin.getDataFolder().exists()) {
+        if (! plugin.getDataFolder().exists()) {
             plugin.getDataFolder().mkdirs();
         }
 
         file = new File(plugin.getDataFolder(), "config.yml");
-        if(!file.exists()) {
+        if (! file.exists()) {
             file.getParentFile().mkdirs();
             plugin.saveDefaultConfig();
         }
@@ -39,7 +39,7 @@ public class ConfigManager {
     }
 
 
-    private void loadConfig(){
+    private void loadConfig() {
 
     }
 }

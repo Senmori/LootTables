@@ -1,10 +1,10 @@
-package org.bukkit.craftbukkit.loottable.entry;
+package net.senmori.loottables.loottable.entry;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import org.bukkit.craftbukkit.loottable.conditions.LootCondition;
-import org.bukkit.craftbukkit.loottable.core.LootContext;
+import net.senmori.loottables.loottable.conditions.LootCondition;
+import net.senmori.loottables.loottable.core.LootContext;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;

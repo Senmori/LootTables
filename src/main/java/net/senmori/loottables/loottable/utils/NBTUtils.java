@@ -1,10 +1,10 @@
-package org.bukkit.craftbukkit.loottable.utils;
+package net.senmori.loottables.loottable.utils;
 
-import net.minecraft.server.NBTTagCompound;
-import net.minecraft.server.NBTTagList;
-import net.minecraft.server.NBTTagString;
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
+import net.minecraft.server.v1_12_R1.NBTTagList;
+import net.minecraft.server.v1_12_R1.NBTTagString;
 import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
@@ -13,9 +13,8 @@ import java.util.Set;
 
 public class NBTUtils {
 
-    // TODO: Replace inside appropriate ItemStack implementation.
     public static ItemStack addAttribute(AttributeModifier modifier, ItemStack stack, Set<EquipmentSlot> validSlots) {
-        net.minecraft.server.ItemStack nmsStack = CraftItemStack.asNMSCopy(stack);
+        net.minecraft.server.v1_12_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(stack);
 
         NBTTagCompound root = nmsStack.hasTag() ? nmsStack.getTag() : new NBTTagCompound();
         NBTTagList modifiers = new NBTTagList();
@@ -33,6 +32,7 @@ public class NBTUtils {
         }
         tag.set("Slot", slotList);
         modifiers.add(tag);
+        assert root != null;
         root.set("AttributeModifiers", modifiers);
         nmsStack.setTag(root);
 

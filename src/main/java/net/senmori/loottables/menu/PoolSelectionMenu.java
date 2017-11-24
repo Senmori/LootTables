@@ -1,8 +1,8 @@
 package net.senmori.loottables.menu;
 
 import net.senmori.loottables.LootTables;
-import org.bukkit.craftbukkit.loot.core.LootPool;
-import org.bukkit.craftbukkit.loot.core.LootTable;
+import net.senmori.loottables.loottable.core.LootPool;
+import net.senmori.loottables.loottable.core.LootTable;
 import net.senmori.loottables.menu.icon.icons.PoolIcon;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -29,21 +29,26 @@ public class PoolSelectionMenu extends Menu {
     public PoolSelectionMenu(LootTable table) {
         this.table = table;
         int size = setSize(table.getLootPools().size());
-        String title = ChatColor.GOLD + "Table: " + ChatColor.RED + "" + ChatColor.ITALIC + table.getResourceLocation().getResourcePath();
+        String title = ChatColor.GOLD + "Table: " + ChatColor.RED + "" + ChatColor.ITALIC + table.getResourceLocation().toString();
         inventory = Bukkit.createInventory(null, size, title);
         loadIcons();
     }
 
     private void loadIcons() {
         int slot = 0;
-        for(LootPool pool : table.getLootPools()) {
+        for (LootPool pool : table.getLootPools()) {
             poolIcons.add(new PoolIcon(slot++, pool));
         }
     }
 
     @Override
-    public Inventory getInventory() { return this.inventory; }
-    public LootTable getTable() { return this.table; }
+    public Inventory getInventory() {
+        return this.inventory;
+    }
+
+    public LootTable getTable() {
+        return this.table;
+    }
 
     @Override
     public void show(Player player) {
@@ -52,7 +57,7 @@ public class PoolSelectionMenu extends Menu {
         new BukkitRunnable() {
             @Override
             public void run() {
-                for(PoolIcon icon : poolIcons) {
+                for (PoolIcon icon : poolIcons) {
                     inventory.setItem(icon.getSlot(), icon.getItemStack());
                 }
                 this.cancel();
@@ -65,7 +70,7 @@ public class PoolSelectionMenu extends Menu {
     public void onClick(InventoryClickEvent event) {
         event.setResult(Event.Result.DENY);
         event.setCancelled(true);
-        if(poolIcons.get(event.getRawSlot()) != null) {
+        if (poolIcons.get(event.getRawSlot()) != null) {
 
         }
     }
@@ -77,11 +82,11 @@ public class PoolSelectionMenu extends Menu {
     }
 
     private int setSize(int poolSize) {
-        if(poolSize <= 9) return 9;
-        if(poolSize > 9 && poolSize <= 18) return 18;
-        if(poolSize > 18 && poolSize <= 27) return 27;
-        if(poolSize > 27 && poolSize <= 36) return 36;
-        if(poolSize > 36 && poolSize <= 45) return 45;
+        if (poolSize <= 9) return 9;
+        if (poolSize > 9 && poolSize <= 18) return 18;
+        if (poolSize > 18 && poolSize <= 27) return 27;
+        if (poolSize > 27 && poolSize <= 36) return 36;
+        if (poolSize > 36 && poolSize <= 45) return 45;
         return 54;
     }
 }

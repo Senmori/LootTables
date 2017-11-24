@@ -31,11 +31,17 @@ public class ParentIcon implements Icon {
     }
 
     @Override
-    public ItemStack getItemStack() { return this.itemStack; }
+    public ItemStack getItemStack() {
+        return this.itemStack;
+    }
 
-    public int getSlot() { return this.slot; }
+    public int getSlot() {
+        return this.slot;
+    }
 
-    public Menu getParent() { return this.parent; }
+    public Menu getParent() {
+        return this.parent;
+    }
 
     @Override
     public void onClick(Player player, int clickedSlot, ItemStack clickedItem, Inventory clickedInventory, ClickType type) {

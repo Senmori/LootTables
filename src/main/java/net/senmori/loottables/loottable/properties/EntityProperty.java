@@ -1,10 +1,10 @@
-package org.bukkit.craftbukkit.loottable.properties;
+package net.senmori.loottables.loottable.properties;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSerializationContext;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
-import org.bukkit.util.ResourceLocation;
 
 import java.util.Random;
 
@@ -15,17 +15,21 @@ public interface EntityProperty {
 
 
     abstract class Serializer<T extends EntityProperty> {
-        private ResourceLocation name;
+        private NamespacedKey name;
         private Class<T> propertyClass;
 
-        protected Serializer(ResourceLocation name, Class<T> propertyClass) {
+        protected Serializer(NamespacedKey name, Class<T> propertyClass) {
             this.name = name;
             this.propertyClass = propertyClass;
         }
 
-        public ResourceLocation getName() { return this.name; }
+        public NamespacedKey getName() {
+            return this.name;
+        }
 
-        public Class<T> getPropertyClass() { return this.propertyClass; }
+        public Class<T> getPropertyClass() {
+            return this.propertyClass;
+        }
 
         public abstract JsonElement serialize(T type, JsonSerializationContext context);
 

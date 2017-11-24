@@ -1,7 +1,8 @@
-package org.bukkit.craftbukkit.loottable.utils;
+package net.senmori.loottables.loottable.utils;
 
-import org.bukkit.craftbukkit.loottable.core.LootEnchantment;
-import org.bukkit.craftbukkit.loottable.core.RandomValueRange;
+import com.google.common.collect.Maps;
+import net.senmori.loottables.loottable.core.LootEnchantment;
+import net.senmori.loottables.loottable.core.RandomValueRange;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -17,11 +18,13 @@ import java.util.Random;
 
 public class EnchantmentHelper {
 
-    private static Random rand = new Random();
-    private static Map<LootEnchantment, Map<Integer, RandomValueRange>> powerLevels = new HashMap<>();
+    private static final Random rand = new Random();
+    private static final Map<LootEnchantment, Map<Integer, RandomValueRange>> powerLevels = Maps.newHashMap();
 
     static {
-        buildPowerLevels();
+        if (powerLevels.isEmpty()) {
+            buildPowerLevels();
+        }
     }
 
 
@@ -45,7 +48,7 @@ public class EnchantmentHelper {
                 if (meta.hasStoredEnchant(randEnchant) && meta.getStoredEnchantLevel(randEnchant) < powerLevel) {
                     do {
                         randEnchant = getWeightedEnchant(list, totalWeight);
-                    } while (!meta.hasStoredEnchant(randEnchant));
+                    } while (! meta.hasStoredEnchant(randEnchant));
                     powerLevel = getPowerLevel(randEnchant, xpLevel);
                 }
                 meta.addStoredEnchant(randEnchant, powerLevel, false);
@@ -83,12 +86,12 @@ public class EnchantmentHelper {
         } else {
             for (LootEnchantment enchant : LootEnchantment.values()) {
                 if (stack.getType().equals(Material.BOOK)) {
-                    if (!allowTreasure && enchant.isTreasure()) continue;
+                    if (! allowTreasure && enchant.isTreasure()) continue;
                     list.add(enchant);
                     continue;
                 }
                 if (enchant.getEnchant().canEnchantItem(stack)) {
-                    if (!allowTreasure && enchant.isTreasure()) continue;
+                    if (! allowTreasure && enchant.isTreasure()) continue;
                     list.add(enchant);
                 }
             }
@@ -99,7 +102,7 @@ public class EnchantmentHelper {
     private static int calcLevel(ItemStack stack, int xpLevel) {
         int i = getEnchantability(stack.getType());
         xpLevel = xpLevel + 1 + rand.nextInt(i / 4 + 1) + rand.nextInt(i / 4 + 1);
-        float f = (rand.nextFloat() + rand.nextFloat() - 1.0F) * .015F;
+        float f = ( rand.nextFloat() + rand.nextFloat() - 1.0F ) * .015F;
         xpLevel = MathHelper.clampInt(Math.round((float) xpLevel + (float) xpLevel * f), 1, 2147483647);
         return xpLevel < 1 ? 1 : xpLevel;
     }
@@ -165,16 +168,17 @@ public class EnchantmentHelper {
             case GOLD_BOOTS:
                 return 25;
             default:
-                return -1;
+                return - 1;
         }
     }
 
     /**
-     * Returns a set containing two numbers(min & max), that will give you the given <br>
-     * enchantment at the appropriate power level, with the given amount of xp levels. <br>
+     * Returns a set containing two numbers(min & max), that will give you the given <br> enchantment at the appropriate
+     * power level, with the given amount of xp levels. <br>
      *
      * @param enchant - the enchantment
      * @param xpLevel - the amount of experience(in levels)
+     *
      * @return
      */
     private static int getPowerLevel(Enchantment enchant, int xpLevel) {
@@ -185,7 +189,7 @@ public class EnchantmentHelper {
         int i = 0;
         for (Integer index : levels.keySet()) {
             RandomValueRange current = levels.get(index);
-            if (current.isInRange(xpLevel) || (!current.isInRange(xpLevel) && xpLevel > current.getMax())) {
+            if (current.isInRange(xpLevel) || ( ! current.isInRange(xpLevel) && xpLevel > current.getMax() )) {
                 level = index > level ? index : level;
             }
             if (index >= enchant.getMaxLevel()) {

@@ -1,14 +1,14 @@
-package org.bukkit.craftbukkit.loottable.core;
+package net.senmori.loottables.loottable.core;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
+import net.senmori.loottables.loottable.adapter.InheritanceAdapter;
+import net.senmori.loottables.loottable.utils.JsonUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.loottable.adapter.InheritanceAdapter;
-import org.bukkit.craftbukkit.loottable.utils.JsonUtils;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.ResourceLocation;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -22,7 +22,7 @@ import java.util.logging.Level;
 
 public class LootTable {
 
-    private ResourceLocation location;
+    private NamespacedKey location;
     private File file;
     private List<LootPool> pools = new ArrayList<>();
 
@@ -30,24 +30,24 @@ public class LootTable {
         this.pools = pools;
     }
 
-	public LootTable() {
+    public LootTable() {
         this.pools = new ArrayList<>();
     }
 
-	/** Add another LootPool to this LootTable */
-	public void addLootPool(LootPool pool) {
+    /** Add another LootPool to this LootTable */
+    public void addLootPool(LootPool pool) {
         this.pools.add(pool);
     }
 
-    /** Set a new {@link ResourceLocation} for this LootTable */
-    public void setResourceLocation(ResourceLocation location) {
+    /** Set a new {@link NamespacedKey} for this LootTable */
+    public void setPath(NamespacedKey location) {
         if (location == null) return;
         this.location = location;
         file = LootTableManager.getFile(location);
     }
 
     public List<ItemStack> generateLootForPools(Random rand, LootContext context) {
-        List items = new ArrayList<>();
+        List<ItemStack> items = new ArrayList<>();
         if (context.addLootTable(this)) {
             List<LootPool> poolList = this.pools;
             for (LootPool p : poolList) {
@@ -60,10 +60,17 @@ public class LootTable {
         return items;
     }
 
-    public static LootTable emptyLootTable() { return new LootTable(new ArrayList<>()); }
+    public static LootTable emptyLootTable() {
+        return new LootTable(new ArrayList<>());
+    }
 
-    public List<LootPool> getLootPools() { return pools; }
-    public ResourceLocation getResourceLocation() { return this.location; }
+    public List<LootPool> getLootPools() {
+        return pools;
+    }
+
+    public NamespacedKey getResourceLocation() {
+        return this.location;
+    }
 
     /** Get the pool with the given name, if it doesn't exist return null */
     public LootPool getLootPool(String name) {
@@ -76,7 +83,9 @@ public class LootTable {
     }
 
     /** Save the LootTable */
-    public boolean save() { return (save(false)); }
+    public boolean save() {
+        return ( save(false) );
+    }
 
     /** Save the LootTable, rewriting all currently written data */
     public boolean save(boolean forceUpdate) {
@@ -89,7 +98,7 @@ public class LootTable {
                     writer.write(json);
                     writer.close();
                 } catch (IOException e) {
-                    Bukkit.getLogger().log(Level.WARNING, "Couldn't create loot table \'" + location + "\' at file \'" + location.getResourcePath() + "\'");
+                    Bukkit.getLogger().log(Level.WARNING, "Couldn't create loot table \'" + location + "\' at file \'" + location.getKey() + "\'");
                     e.printStackTrace();
                     return false;
                 }
@@ -104,7 +113,7 @@ public class LootTable {
                 writer.write(json);
                 writer.close();
             } catch (IOException e) {
-                Bukkit.getLogger().log(Level.WARNING, "Couldn't create loot table \'" + location + "\' at file \'" + location.getResourcePath() + "\'");
+                Bukkit.getLogger().log(Level.WARNING, "Couldn't create loot table \'" + location + "\' at file \'" + location.getKey() + "\'");
                 e.printStackTrace();
                 return false;
             }
@@ -130,20 +139,21 @@ public class LootTable {
         LootTableManager.getRegisteredLootTables().put(getResourceLocation(), this);
     }
 
-	public static class Serializer extends InheritanceAdapter<LootTable> {
+    public static class Serializer extends InheritanceAdapter<LootTable> {
 
-		public Serializer() {}
+        public Serializer() {
+        }
 
-		public LootTable deserialize(JsonElement json, Type type, JsonDeserializationContext context) {
-			JsonObject jsonObject = JsonUtils.getJsonObject(json, "loot table");
+        public LootTable deserialize(JsonElement json, Type type, JsonDeserializationContext context) {
+            JsonObject jsonObject = JsonUtils.getJsonObject(json, "loot table");
             LootPool[] lootPool = JsonUtils.deserializeClass(jsonObject, "pools", new LootPool[0], context, LootPool[].class);
             return new LootTable(Arrays.asList(lootPool));
         }
 
-		public JsonElement serialize(LootTable table, Type type, JsonSerializationContext context) {
-			JsonObject jsonObject = new JsonObject();
+        public JsonElement serialize(LootTable table, Type type, JsonSerializationContext context) {
+            JsonObject jsonObject = new JsonObject();
             jsonObject.add("pools", context.serialize(table.getLootPools()));
             return jsonObject;
-		}
-	}
+        }
+    }
 }

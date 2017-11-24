@@ -1,4 +1,4 @@
-package org.bukkit.craftbukkit.loottable.core;
+package net.senmori.loottables.loottable.core;
 
 import org.bukkit.enchantments.Enchantment;
 
@@ -54,11 +54,17 @@ public enum LootEnchantment {
         this.enchant = enchant;
     }
 
-    public int getWeight() { return this.weight; }
+    public int getWeight() {
+        return this.weight;
+    }
 
-    public boolean isTreasure() { return this.treasure; }
+    public boolean isTreasure() {
+        return this.treasure;
+    }
 
-    public Enchantment getEnchant() { return this.enchant; }
+    public Enchantment getEnchant() {
+        return this.enchant;
+    }
 
 
     public static LootEnchantment fromEnchantment(Enchantment enchant) {
