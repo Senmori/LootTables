@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LootTable {
@@ -29,6 +28,10 @@ public class LootTable {
     private NamespacedKey location;
     private File file;
     private List<LootPool> pools = new ArrayList<>();
+    
+    public static LootTable emptyLootTable() {
+        return new LootTable(new ArrayList<>());
+    }
 
     public LootTable(List<LootPool> pools) {
         this.pools = pools;
@@ -67,15 +70,11 @@ public class LootTable {
         return items;
     }
 
-    public static LootTable emptyLootTable() {
-        return new LootTable(new ArrayList<>());
-    }
-
     public List<LootPool> getLootPools() {
         return pools;
     }
 
-    public NamespacedKey getResourceLocation() {
+    public NamespacedKey getKey() {
         return this.location;
     }
 
@@ -87,63 +86,6 @@ public class LootTable {
             }
         }
         return null;
-    }
-
-    /** Save the LootTable */
-    public boolean save() {
-        return save(false);
-    }
-
-    /** Save the LootTable, rewriting all currently written data */
-    public boolean save(boolean forceUpdate) {
-        if (forceUpdate) {
-            if (file != null) {
-                try {
-                    FileWriter writer = new FileWriter(file);
-                    writer.write(""); // clear file of all data
-                    String json = LootTableManager.getGson().toJson(this);
-                    writer.write(json);
-                    writer.close();
-                } catch (IOException e) {
-                    Bukkit.getLogger().log(Level.WARNING, "Couldn't create loot table \'" + location + "\' at file \'" + location.getKey() + "\'");
-                    e.printStackTrace();
-                    return false;
-                }
-            }
-            updateManager();
-            return true;
-        }
-        if (file != null && file.exists()) {
-            try {
-                FileWriter writer = new FileWriter(file);
-                String json = LootTableManager.getGson().toJson(this);
-                writer.write(json);
-                writer.close();
-            } catch (IOException e) {
-                Bukkit.getLogger().log(Level.WARNING, "Couldn't create loot table \'" + location + "\' at file \'" + location.getKey() + "\'");
-                e.printStackTrace();
-                return false;
-            }
-        } else { // file doesn't exist
-            file = LootTableManager.getFile(location);
-            try {
-                FileWriter writer = new FileWriter(file);
-                file.createNewFile();
-                String json = LootTableManager.getGson().toJson(this);
-                writer.write(json);
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
-        updateManager();
-        return true;
-    }
-
-
-    private void updateManager() {
-        LootTableManager.getRegisteredLootTables().put(getResourceLocation(), this);
     }
 
     public static class Serializer extends InheritanceAdapter<LootTable> {

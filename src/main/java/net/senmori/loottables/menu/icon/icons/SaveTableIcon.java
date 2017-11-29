@@ -26,7 +26,7 @@ public class SaveTableIcon implements Icon {
         this.table = table;
         itemStack = new ItemStack(Material.EMPTY_MAP);
         ItemMeta meta = itemStack.getItemMeta();
-        meta.setDisplayName(ChatColor.AQUA + "Save and Close (" + ChatColor.RESET + table.getResourceLocation().toString() + ChatColor.AQUA + ")");
+        meta.setDisplayName(ChatColor.AQUA + "Save and Close (" + ChatColor.RESET + table.getKey().toString() + ChatColor.AQUA + ")");
         itemStack.setItemMeta(meta);
         this.parent = parent;
     }
@@ -52,7 +52,7 @@ public class SaveTableIcon implements Icon {
     public void onClick(Player player, int clickedSlot, ItemStack clickedItem, Inventory clickedInventory, ClickType type) {
         player.closeInventory();
         if (saveTable()) {
-            player.sendMessage(ChatColor.AQUA + "Successfully updated \'" + ChatColor.RESET + table.getResourceLocation().toString() + ChatColor.AQUA + "\'!");
+            player.sendMessage(ChatColor.AQUA + "Successfully updated \'" + ChatColor.RESET + table.getKey().toString() + ChatColor.AQUA + "\'!");
         }
     }
 
