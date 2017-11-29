@@ -55,7 +55,7 @@ public class LootUtils {
         // handle specific minecarts because they are "special"
         if (entity.getType().equals(EntityType.MINECART_CHEST) || entity.getType().equals(EntityType.MINECART_HOPPER)) {
             EntityMinecartContainer container = ( (EntityMinecartContainer) entity );
-            container.a(new MinecraftKey(location.toString()), seed); // PAIL Rename readFromNBT
+            container.a(new MinecraftKey(location.toString()), seed); // PAIL Rename setLootTable
         }
         // force update of NBT data since you cannot directly set the LootTable of an entity
         if (entity instanceof EntityInsentient) {

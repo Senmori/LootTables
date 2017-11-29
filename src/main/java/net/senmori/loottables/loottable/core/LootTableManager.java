@@ -119,7 +119,7 @@ public final class LootTableManager {
             if (file != null && file.exists()) {
                 try {
                     LootTable table = load(path);
-                    table.setPath(path);
+                    table.path(path);
                     registeredLootTables.put(path, table);
                     return table;
                 } catch (IOException e) {
@@ -137,7 +137,7 @@ public final class LootTableManager {
                 try {
                     LootTable table = load(path);
                     registeredLootTables.put(path, table);
-                    table.setPath(path);
+                    table.path(path);
                     return table;
                 } catch (IOException e) {
                     Bukkit.getLogger().log(Level.WARNING, "Couldn't load loot table " + path.toString());
@@ -147,7 +147,7 @@ public final class LootTableManager {
                 // no LootTable file exists, create new file, and return empty LootTable
                 LootTable newTable = LootTable.emptyLootTable();
                 registeredLootTables.put(path, newTable);
-                newTable.setPath(path);
+                newTable.path(path);
                 return newTable;
             }
         }
@@ -161,7 +161,7 @@ public final class LootTableManager {
 
     /** Get the loot table location in a given world, at a given location */
     private static String getFilePath(World world, NamespacedKey path) {
-        return world.getWorldFolder() + File.separator + "data" + File.separator + "loot_tables" + File.separator + path.getNamespace() + File.separator + path.getKey() + ".json";
+        return world.getWorldFolder() + File.separator + "data" + path.getNamespace() +  File.separator + "loot_tables" + File.separator + path.getKey() + ".json";
     }
 
     public static File getFile(NamespacedKey path) {

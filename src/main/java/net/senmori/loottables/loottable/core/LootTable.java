@@ -39,16 +39,18 @@ public class LootTable {
     }
 
     /** Add another LootPool to this LootTable */
-    public void addLootPool(LootPool pool) {
+    public LootTable addLootPool(LootPool pool) {
         this.pools.add(pool);
+        return this;
     }
 
     /** Set a new {@link NamespacedKey} for this LootTable */
-    public void setPath(NamespacedKey path) {
+    public LootTable path(NamespacedKey path) {
         Validate.notNull(path, "Path cannot be null");
         Validate.notEmpty(path.getKey(), "Path key cannot be empty ");
-        Validate.isTrue(!VALID_CHARS_PATTERN.matcher(path.getKey()).matches(), "Loot Table can only contain a-z, ");
+        Validate.isTrue(VALID_CHARS_PATTERN.matcher(path.getKey()).matches(), "Loot Table can only contain a-z, ");
         this.location = path;
+        return this;
     }
 
     public List<ItemStack> generateLootForPools(Random rand, LootContext context) {
