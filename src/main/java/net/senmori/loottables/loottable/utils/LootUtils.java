@@ -89,14 +89,4 @@ public class LootUtils {
     public static boolean isValidBlock(Block block) {
         return block != null && validBlocks.contains(block.getType());
     }
-
-
-    public static String getNameForItem(net.minecraft.server.v1_12_R1.ItemStack stack) {
-        for (MinecraftKey key : Item.REGISTRY.keySet()) {
-            if (Item.REGISTRY.get(key) != Items.a && stack.getName().equals(Item.REGISTRY.get(key).getName())) {
-                return key.toString();
-            }
-        }
-        return stack.getName();
-    }
 }

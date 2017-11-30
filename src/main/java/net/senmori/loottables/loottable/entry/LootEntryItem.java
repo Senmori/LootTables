@@ -74,7 +74,7 @@ public class LootEntryItem extends LootEntry {
     }
 
     private String toMinecraftName() {
-        return LootUtils.getNameForItem(CraftItemStack.asNMSCopy(new ItemStack(material)));
+        return CraftItemStack.asNMSCopy(new ItemStack(material)).getName();
     }
 
     public List<LootFunction> getFunctions() {

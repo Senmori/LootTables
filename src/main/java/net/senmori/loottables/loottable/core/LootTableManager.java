@@ -1,7 +1,6 @@
 package net.senmori.loottables.loottable.core;
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
@@ -16,7 +15,6 @@ import net.senmori.loottables.loottable.entry.LootEntryAdapter;
 import net.senmori.loottables.loottable.functions.LootFunction;
 import net.senmori.loottables.loottable.functions.LootFunctionManager;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -75,39 +73,6 @@ public final class LootTableManager {
 
     public HashMap<NamespacedKey, LootTable> getRegisteredLootTables() {
         return registeredLootTables;
-    }
-
-    /**
-     * Get a {@link NamespacedKey} that matches the given path.<br> Do not include the domain. (i.e. "minecraft")
-     *
-     * @param resourcePath - the path to the loot table, without file extendsions.
-     *
-     * @return the {@link NamespacedKey} that has the matching resourcePath, or null.
-     */
-    public NamespacedKey getKey(String resourcePath) {
-        for (NamespacedKey location : registeredLootTables.keySet()) {
-            if (location.getKey().equals(resourcePath)) {
-                return location;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Get a {@link NamespacedKey} that matches the given domain and path.
-     *
-     * @param resourceDomain - the namespace of the plugin(i.e. "minecraft", or the plugin name)
-     * @param resourcePath   - the path to the loot table, without file extensions.
-     *
-     * @return the {@link NamespacedKey} that has the matching arguments, or null.
-     */
-    public NamespacedKey getKey(String resourceDomain, String resourcePath) {
-        for (NamespacedKey loc : registeredLootTables.keySet()) {
-            if (loc.getKey().equals(resourceDomain) && loc.getKey().equals(resourcePath)) {
-                return loc;
-            }
-        }
-        return null;
     }
 
     /**
