@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.senmori</groupId>
     <artifactId>loottables</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>1.0</version>
     <name>LootTables</name>
     <description>Plugin to make using LootTables easier.</description>
     <properties>

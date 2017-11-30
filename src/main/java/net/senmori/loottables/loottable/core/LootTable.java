@@ -28,7 +28,7 @@ public class LootTable {
     private NamespacedKey location;
     private File file;
     private List<LootPool> pools = new ArrayList<>();
-    
+
     public static LootTable emptyLootTable() {
         return new LootTable(new ArrayList<>());
     }

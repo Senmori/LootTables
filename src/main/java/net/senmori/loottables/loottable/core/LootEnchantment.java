@@ -68,8 +68,10 @@ public enum LootEnchantment {
 
 
     public static LootEnchantment fromEnchantment(Enchantment enchant) {
-        for (LootEnchantment e : LootEnchantment.values()) {
-            if (e.getEnchant().getName().equals(enchant.getName())) return e;
+        for (LootEnchantment e : values()) {
+            if (e.getEnchant().getName().equals(enchant.getName())) {
+                return e;
+            }
         }
         return null;
     }

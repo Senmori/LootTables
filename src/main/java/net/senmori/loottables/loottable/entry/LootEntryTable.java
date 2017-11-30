@@ -11,6 +11,7 @@ import net.senmori.loottables.loottable.core.LootTableManager;
 import net.senmori.loottables.loottable.utils.JsonUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
@@ -22,23 +23,25 @@ import java.util.Random;
 public class LootEntryTable extends LootEntry {
 
     private NamespacedKey lootTableLocation;
+    private World world;
+    private String datapackName;
 
-    public LootEntryTable(NamespacedKey location, int weight, int quality, List<LootCondition> conditions) {
+    public LootEntryTable(LootTable table, int weight, int quality, List<LootCondition> conditions) {
         super(weight, quality, conditions);
-        this.lootTableLocation = location;
+        this.lootTableLocation = path;
     }
 
-    public LootEntryTable(NamespacedKey location, int weight, int quality) {
-        this(location, weight, quality, null);
+    public LootEntryTable(NamespacedKey path, int weight, int quality) {
+        this(path, weight, quality, null);
     }
 
-    public NamespacedKey getLootTableLocation() {
+    public NamespacedKey getKey() {
         return this.lootTableLocation;
     }
 
     @Override
     public void addLoot(Collection<ItemStack> itemStacks, Random rand, LootContext context) {
-        LootTable table = LootTableManager.getLootTable(lootTableLocation);
+        LootTable table = LootTableManager.getInstance().getLootTable(lootTableLocation);
         List<ItemStack> coll = table.generateLootForPools(rand, context);
         itemStacks.addAll(coll);
     }
@@ -52,17 +55,17 @@ public class LootEntryTable extends LootEntry {
 
     public static LootEntryTable deserialize(JsonObject jsonObject, JsonDeserializationContext context, int weight, int quality, List<LootCondition> conditions) {
         String name = JsonUtils.getString(jsonObject, "name");
-        NamespacedKey rLocation = null;
+        NamespacedKey key = null;
         if (name.contains("minecraft")) {
-            rLocation = NamespacedKey.minecraft(name);
+            key = NamespacedKey.minecraft(name);
         } else {
             Plugin plugin = Bukkit.getPluginManager().getPlugin(name);
             if (plugin != null) {
-                rLocation = new NamespacedKey(plugin, name.substring(52));
+                key = new NamespacedKey(plugin, name.substring(52));
             } else {
                 throw new JsonSyntaxException(String.format("Invalid syntax. Required <namespace>:<id>. Found %s", name));
             }
         }
-        return new LootEntryTable(rLocation, weight, quality, conditions);
+        return new LootEntryTable(key, weight, quality, conditions);
     }
 }
