@@ -28,11 +28,12 @@ public class LootEntryTable extends LootEntry {
 
     public LootEntryTable(LootTable table, int weight, int quality, List<LootCondition> conditions) {
         super(weight, quality, conditions);
-        this.lootTableLocation = path;
+        this.lootTableLocation = table.getKey();
     }
 
     public LootEntryTable(NamespacedKey path, int weight, int quality) {
-        this(path, weight, quality, null);
+        super(weight, quality, null);
+        this.lootTableLocation = path;
     }
 
     public NamespacedKey getKey() {
@@ -42,8 +43,8 @@ public class LootEntryTable extends LootEntry {
     @Override
     public void addLoot(Collection<ItemStack> itemStacks, Random rand, LootContext context) {
         LootTable table = LootTableManager.getInstance().getLootTable(lootTableLocation);
-        List<ItemStack> coll = table.generateLootForPools(rand, context);
-        itemStacks.addAll(coll);
+        List<ItemStack> loot = table.generateLootForPools(rand, context);
+        itemStacks.addAll(loot);
     }
 
 
@@ -55,11 +56,12 @@ public class LootEntryTable extends LootEntry {
 
     public static LootEntryTable deserialize(JsonObject jsonObject, JsonDeserializationContext context, int weight, int quality, List<LootCondition> conditions) {
         String name = JsonUtils.getString(jsonObject, "name");
+        String namespace = name.substring(0, name.indexOf(":"));
         NamespacedKey key = null;
         if (name.contains("minecraft")) {
-            key = NamespacedKey.minecraft(name);
+            key = NamespacedKey.minecraft(namespace);
         } else {
-            Plugin plugin = Bukkit.getPluginManager().getPlugin(name);
+            Plugin plugin = Bukkit.getPluginManager().getPlugin(namespace);
             if (plugin != null) {
                 key = new NamespacedKey(plugin, name.substring(52));
             } else {

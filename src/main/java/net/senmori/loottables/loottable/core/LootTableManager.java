@@ -36,9 +36,9 @@ public final class LootTableManager {
     private static LootTableManager INSTANCE = new LootTableManager();
 
     private Gson gson;
-    private final String baseDir = Bukkit.class.getProtectionDomain().getCodeSource().getLocation().getPath();
     /* ConcurrentHashMap because it's thread safe, supposedly */
     private HashMap<NamespacedKey, LootTable> registeredLootTables = Maps.newHashMap();
+    private final DataPackManager dataPackManager = DataPackManager.getInstance();
     public final UUID defWorldUUID;
 
 
@@ -73,6 +73,12 @@ public final class LootTableManager {
 
     public HashMap<NamespacedKey, LootTable> getRegisteredLootTables() {
         return registeredLootTables;
+    }
+
+    public LootTable getLootTable(NamespacedKey path) {
+        String packName = "";
+        World world = Bukkit.getWorld(defWorldUUID);
+        return getLootTable(world, path, packName);
     }
 
     /**

@@ -4,44 +4,53 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 
-import java.io.File;
 import java.util.UUID;
 
-public class DataPack {
+public class DataPack implements IDataPack {
 
-    private final String name;
+    private final NamespacedKey name;
     private final UUID worldUUID;
-    private DataPack loadBefore = null;
-    private DataPack loadAfter = null;
+    private IDataPack loadBefore = null;
+    private IDataPack loadAfter = null;
     private boolean enabled = false;
 
-    public DataPack(String name, World world) {
+    public DataPack(NamespacedKey name, World world) {
         this.name = name;
         this.worldUUID = world.getUID();
+        enabled = true;
     }
 
-    public DataPack(String name, UUID worldUUID) {
+    public DataPack(NamespacedKey name, UUID worldUUID) {
         this.name = name;
         this.worldUUID = worldUUID;
+        enabled = true;
     }
 
-    public DataPack loadBefore(DataPack pack) {
-        if( (loadAfter != null && pack != null) && pack.getName().equals(loadAfter.getName())) {
-            throw new UnsupportedOperationException("Cannot load " + pack.getName() + " before a pack it's supposed to load after ");
+    public IDataPack loadBefore(IDataPack pack) {
+        if( (loadAfter != null && pack != null) && pack.getKey().equals(loadAfter.getKey())) {
+            throw new UnsupportedOperationException("Cannot load " + pack.getKey() + " before a pack it's supposed to load after ");
         }
         this.loadBefore = pack;
         return this;
     }
 
-    public DataPack loadAfter(DataPack pack) {
-        if( (loadBefore != null && pack != null) && pack.getName().equals(loadBefore.getName())) {
-            throw new UnsupportedOperationException("Cannot load " + pack.getName() + " after a pack it's supposed to load before");
+    public IDataPack loadAfter(IDataPack pack) {
+        if( (loadBefore != null && pack != null) && pack.getKey().equals(loadBefore.getKey())) {
+            throw new UnsupportedOperationException("Cannot load " + pack.getKey() + " after a pack it's supposed to load before");
         }
         this.loadAfter = pack;
         return this;
     }
 
-    public String getName() {
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    public void setEnabled(boolean value) {
+        this.enabled = value;
+    }
+
+    public NamespacedKey getKey() {
         return this.name;
     }
 
@@ -49,11 +58,11 @@ public class DataPack {
         return worldUUID;
     }
 
-    public DataPack getLoadBefore() {
+    public IDataPack getLoadBefore() {
         return loadBefore;
     }
 
-    public DataPack getLoadAfter() {
+    public IDataPack getLoadAfter() {
         return loadAfter;
     }
 
@@ -61,25 +70,11 @@ public class DataPack {
         return Bukkit.getWorld(this.worldUUID);
     }
 
-    public File getRootDirectory() {
-        String path = getWorld().getWorldFolder() + File.separator + "datapacks"
-                                                  + File.separator + getName()
-                                                  + File.separator + "data";
-        return new File(path);
-    }
-
-    public File getLootTableFile(NamespacedKey namespace) {
-        String path = getRootDirectory() + File.separator + namespace.getNamespace()
-                                         + File.separator + "loot_tables";
-        return new File(path);
-    }
-
-
     public boolean equals(Object other) {
         if(other == null || !(other instanceof DataPack)) {
             return false;
         }
         DataPack data = (DataPack)other;
-        return data.getWorldUID().equals(this.getWorldUID()) && data.getName().equals(this.getName());
+        return data.getWorldUID().equals(this.getWorldUID()) && data.getKey().equals(this.getKey());
     }
 }
