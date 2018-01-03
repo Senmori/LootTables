@@ -93,8 +93,6 @@ public class LootConditionManager {
             return jsonObject;
         }
 
-        int i = 0;
-
         @Override
         public LootCondition deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException {
             JsonObject json = JsonUtils.getJsonObject(jsonElement, "condition");

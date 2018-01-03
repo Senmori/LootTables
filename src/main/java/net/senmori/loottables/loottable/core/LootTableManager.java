@@ -33,7 +33,7 @@ import java.util.logging.Level;
  * This class should only be instantiated once, preferably inside CraftBukkit.
  */
 public final class LootTableManager {
-    private static LootTableManager INSTANCE = new LootTableManager();
+    private static final LootTableManager INSTANCE = new LootTableManager();
 
     private Gson gson;
     /* ConcurrentHashMap because it's thread safe, supposedly */
@@ -43,9 +43,6 @@ public final class LootTableManager {
 
 
     public static LootTableManager getInstance() {
-        if(INSTANCE == null) {
-            INSTANCE = new LootTableManager();
-        }
         return INSTANCE;
     }
 
